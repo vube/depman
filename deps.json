@@ -1,0 +1,23 @@
+{
+    "gocheck": {
+        "repo": "launchpad.net/gocheck",
+        "version": "85",
+        "type": "bzr"
+    },
+    "gocov": {
+        "repo": "github.com/vube/gocov/gocov",
+        "version": "90c9390",
+        "type": "git"
+    },
+    "gocov-html": {
+        "repo": "https://github.com/matm/gocov-html.git",
+        "version": "f83448b",
+        "type": "git-clone",
+        "alias": "github.com/matm/gocov-html"
+    },
+    "golint": {
+        "repo": "github.com/golang/lint/golint",
+        "version": "22f4d5e",
+        "type": "git"
+    }
+}

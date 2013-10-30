@@ -1,0 +1,17 @@
+{
+	"git": {
+		"repo": "github.com/likexian/simplejson",
+		"version": "9aa1bf975aeb391fd419ec5755ea411d8994",
+		"type":"git"
+	},
+	"hg":{
+		"repo":"code.google.com/p/go.example/hello",
+		"version":"d401d3c72ec1",
+		"type":"hg"
+	},
+	"bzr":{
+		"repo":"launchpad.net/tomb",
+		"version":"2",
+		"type":"bzr"
+	}
+}

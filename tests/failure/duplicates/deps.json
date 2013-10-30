@@ -1,0 +1,17 @@
+{
+	"Repo": {
+		"repo": "github.com/alecthomas/gozmq",
+		"version": "f2e05367f78516cffa9",
+		"type":"git"
+	},
+	"Same Version": {
+		"repo": "github.com/alecthomas/gozmq",
+		"version": "f2e05367f78516cffa9",
+		"type":"git"
+	},
+	"Different Version": {
+		"repo": "github.com/alecthomas/gozmq",
+		"version": "eb7ecd5e791c908a06",
+		"type":"git"
+	}
+}

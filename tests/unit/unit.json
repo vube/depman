@@ -1,0 +1,17 @@
+{
+	"one": {
+		"repo": "repo_one",
+		"version": "1",
+		"type":"t"
+	},
+	"two": {
+		"repo": "repo_two",
+		"version": "2",
+		"type":"t"
+	},
+	"three": {
+		"repo": "repo_three",
+		"version": "3",
+		"type":"t"
+	}
+}
