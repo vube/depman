@@ -5,6 +5,8 @@ Dependency management helper for Golang packages. Supports versioned dependencie
 
 Copyright 2013 Vubeology, Inc.
 
+Released under the MIT License (see LICENSE).
+
 Installation
 ----------------
 
@@ -54,7 +56,6 @@ Requirements
 * Shall not require any external dependencies for normal operation
 * Testing dependencies shall be installed through depman
 * `go vet` shall not indicate any problems
-* `golint` (github.com/golang/lint) shall not indicate any problems
 
 Testing
 -----------
@@ -74,9 +75,6 @@ Testing
 
 	# Vet
 	go vet ./...
-
-	# Lint
-	golint .
 
 Basic Algorithm
 -----------------------
