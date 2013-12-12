@@ -6,14 +6,14 @@ package util
 
 import (
 	"flag"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	pathPkg "path"
 	"strings"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 )
 
 // GLOBALS
@@ -197,9 +197,9 @@ func defaultIndent() (res string) {
 func PrintDep(name string, d dep.Dependency) {
 	if !silent {
 		if verbose {
-			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" Repo: ")+d.Repo+colors.Yellow(" Version: ")+d.Version)
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+d.Version+")")+" "+d.Repo)
 		} else {
-			logger.Output(2, indent()+colors.Blue(name))
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+d.Version+")"))
 		}
 	}
 }
