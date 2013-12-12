@@ -4,13 +4,13 @@ package util
 
 import (
 	"bytes"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
 	"io/ioutil"
 	. "launchpad.net/gocheck"
 	"log"
 	"os"
 	"testing"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 )
 
 // Hook up gocheck into the "go test" runner.
@@ -186,10 +186,10 @@ func (s *TestSuite) TestPrintDep(c *C) {
 
 	d := dep.Dependency{Repo: "repo", Version: "version", Type: "type"}
 	PrintDep("NNN", d)
-	c.Check(buf.String(), Equals, "NNN\n")
+	c.Check(buf.String(), Equals, "NNN (version)\n")
 
 	buf.Truncate(0)
 	verbose = true
 	PrintDep("NNN", d)
-	c.Check(buf.String(), Equals, "NNN Repo: repo Version: version\n")
+	c.Check(buf.String(), Equals, "NNN (version) repo\n")
 }
