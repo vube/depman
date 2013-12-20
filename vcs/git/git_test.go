@@ -8,8 +8,8 @@ import (
 	"log"
 	"os"
 	"testing"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
+	"vube/depman/colors"
+	"vube/depman/util"
 )
 
 // Hook up gocheck into the "go test" runner.
@@ -33,7 +33,7 @@ func (s *TestSuite) SetUpTest(c *C) {
 
 func (s *TestSuite) TestIsGitBranch(c *C) {
 
-	util.Cd(os.Getenv("GOPATH") + "/src/github.com/vube/depman")
+	util.Cd(os.Getenv("GOPATH") + "/src/vube/depman")
 	c.Check(IsBranch("master"), Equals, true)
 
 	c.Check(IsBranch("2.1.0"), Equals, false)

@@ -5,12 +5,12 @@ package vcs
 
 import (
 	"errors"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
-	"github.com/vube/depman/vcs/bzr"
-	"github.com/vube/depman/vcs/git"
-	"github.com/vube/depman/vcs/hg"
+	"vube/depman/colors"
+	"vube/depman/dep"
+	"vube/depman/util"
+	"vube/depman/vcs/bzr"
+	"vube/depman/vcs/git"
+	"vube/depman/vcs/hg"
 )
 
 // Checkout uses the appropriate VCS to checkout the specified version of the code
@@ -22,7 +22,7 @@ func Checkout(d dep.Dependency, clean bool) (result int) {
 			util.RunCommand("git reset --hard HEAD")
 			util.RunCommand("git clean -f")
 		}
-		if util.RunCommand("git checkout " + d.Version) != 0 {
+		if util.RunCommand("git checkout "+d.Version) != 0 {
 			util.RunCommand("git fetch")
 			util.RunCommand("git checkout " + d.Version)
 		}
@@ -70,16 +70,16 @@ func LastCommit(d dep.Dependency, branch string) (hash string, err error) {
 //GetHead - Render a revspec to a commit ID
 func GetHead(d dep.Dependency) (to_return string, err error) {
 	switch d.Type {
-		case dep.TypeGit, dep.TypeGitClone:
-			to_return, err = git.GetHead(d)
-		case dep.TypeHg:
-			to_return, err = hg.GetHead(d)
-		case dep.TypeBzr:
-			to_return, err = bzr.GetHead(d)
-		default:
-			util.PrintIndent(colors.Red(d.Repo + ": Unknown repository type (" + d.Type + ")"))
-			util.PrintIndent(colors.Red("Valid Repository types: " + dep.TypeGit + ", " + dep.TypeHg + ", " + dep.TypeBzr + ", " + dep.TypeGitClone))
-			util.Fatal("")
+	case dep.TypeGit, dep.TypeGitClone:
+		to_return, err = git.GetHead(d)
+	case dep.TypeHg:
+		to_return, err = hg.GetHead(d)
+	case dep.TypeBzr:
+		to_return, err = bzr.GetHead(d)
+	default:
+		util.PrintIndent(colors.Red(d.Repo + ": Unknown repository type (" + d.Type + ")"))
+		util.PrintIndent(colors.Red("Valid Repository types: " + dep.TypeGit + ", " + dep.TypeHg + ", " + dep.TypeBzr + ", " + dep.TypeGitClone))
+		util.Fatal("")
 	}
 	return
 }

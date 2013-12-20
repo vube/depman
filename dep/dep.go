@@ -12,7 +12,7 @@ import (
 	"os"
 	"path"
 	"strings"
-	"github.com/vube/depman/colors"
+	"vube/depman/colors"
 )
 
 // Dependency Types
@@ -29,7 +29,7 @@ const DepsFile string = "deps.json"
 // Dependency defines a single dependency
 type Dependency struct {
 	Repo    string `json:"repo"`
-	Version string `json:"version"`
+	Version string `json:"version,omitempty"`
 	Type    string `json:"type"`
 	Alias   string `json:"alias,omitempty"`
 }
@@ -53,10 +53,21 @@ func Read(filename string) (deps DependencyMap, err error) {
 	if err != nil {
 		return
 	}
+
 	err = json.Unmarshal(data, &deps.Map)
 	if err != nil {
 		return
 	}
+
+	for key, _ := range deps.Map {
+		val := deps.Map[key]
+		// if no version specified, use a default of master
+		if val.Version == "" {
+			val.Version = "master"
+			deps.Map[key] = val
+		}
+	}
+
 	deps.Path = filename
 	return
 }

@@ -7,9 +7,9 @@ import (
 	. "launchpad.net/gocheck"
 	"log"
 	"testing"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
+	"vube/depman/colors"
+	"vube/depman/dep"
+	"vube/depman/util"
 )
 
 // Hook up gocheck into the "go test" runner.

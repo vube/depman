@@ -6,10 +6,10 @@ package add
 import (
 	"fmt"
 	"strings"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/install"
-	"github.com/vube/depman/util"
+	"vube/depman/colors"
+	"vube/depman/dep"
+	"vube/depman/install"
+	"vube/depman/util"
 )
 
 // Add interactively prompts the user for details of a dependency, adds it to deps.json, and writes out the file
