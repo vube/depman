@@ -59,11 +59,20 @@ func Read(filename string) (deps DependencyMap, err error) {
 		return
 	}
 
+	// traverse map and look for empty version fields - provide a default if such found
 	for key, _ := range deps.Map {
 		val := deps.Map[key]
-		// if no version specified, use a default of master
 		if val.Version == "" {
-			val.Version = "master"
+			switch val.Type {
+			case TypeGit, TypeGitClone:
+				val.Version="master"	
+			case TypeHg:
+				val.Version="default"	
+			case TypeBzr:
+				val.Version="trunk"	
+			default:
+				val.Version=""	
+			}	
 			deps.Map[key] = val
 		}
 	}
