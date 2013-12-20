@@ -12,8 +12,8 @@ import (
 	"os/exec"
 	pathPkg "path"
 	"strings"
-	"vube/depman/colors"
-	"vube/depman/dep"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
 )
 
 // GLOBALS

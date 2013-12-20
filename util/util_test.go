@@ -9,8 +9,8 @@ import (
 	"log"
 	"os"
 	"testing"
-	"vube/depman/colors"
-	"vube/depman/dep"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
 )
 
 // Hook up gocheck into the "go test" runner.

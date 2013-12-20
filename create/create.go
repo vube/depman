@@ -5,9 +5,9 @@ package create
 
 import (
 	"io/ioutil"
-	"vube/depman/colors"
-	"vube/depman/dep"
-	"vube/depman/util"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/util"
 )
 
 // Default empty deps.json

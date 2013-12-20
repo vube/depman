@@ -5,12 +5,12 @@ package vcs
 
 import (
 	"errors"
-	"vube/depman/colors"
-	"vube/depman/dep"
-	"vube/depman/util"
-	"vube/depman/vcs/bzr"
-	"vube/depman/vcs/git"
-	"vube/depman/vcs/hg"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/util"
+	"github.com/vube/depman/vcs/bzr"
+	"github.com/vube/depman/vcs/git"
+	"github.com/vube/depman/vcs/hg"
 )
 
 // Checkout uses the appropriate VCS to checkout the specified version of the code

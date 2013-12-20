@@ -5,9 +5,9 @@ package hg
 import (
 	"os/exec"
 	"strings"
-	"vube/depman/colors"
-	"vube/depman/dep"
-	"vube/depman/util"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/util"
 )
 
 // LastCommit retrieves the version number of the last commit on branch

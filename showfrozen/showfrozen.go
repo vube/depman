@@ -4,10 +4,10 @@ package showfrozen
 
 import (
 	"fmt"
-	"vube/depman/colors"
-	"vube/depman/dep"
-	"vube/depman/util"
-	"vube/depman/vcs"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/util"
+	"github.com/vube/depman/vcs"
 )
 
 //Read - get top-level frozen dependencies

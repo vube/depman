@@ -4,11 +4,11 @@ package update
 // Copyright 2013 Vubeology, Inc.
 
 import (
-	"vube/depman/colors"
-	"vube/depman/dep"
-	"vube/depman/install"
-	"vube/depman/util"
-	"vube/depman/vcs"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/install"
+	"github.com/vube/depman/util"
+	"github.com/vube/depman/vcs"
 )
 
 // Update rewrites Dependency name in deps.json to use the last commit in branch as version

@@ -12,7 +12,7 @@ import (
 	"os"
 	"path"
 	"strings"
-	"vube/depman/colors"
+	"github.com/vube/depman/colors"
 )
 
 // Dependency Types

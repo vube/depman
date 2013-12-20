@@ -3,16 +3,16 @@ package upgrade
 // Copyright 2013 Vubeology, Inc.
 
 import (
-	"vube/depman/dep"
-	"vube/depman/install"
-	"vube/depman/util"
+	"github.com/vube/depman/dep"
+	"github.com/vube/depman/install"
+	"github.com/vube/depman/util"
 )
 
 // Self upgrades this version of depman to the latest on the master branch
 func Self() {
 	deps := dep.New()
 	d := dep.Dependency{}
-	d.Repo = "vube/depman"
+	d.Repo = "github.com/vube/depman"
 	d.Version = "master"
 	d.Type = "git"
 
@@ -21,5 +21,5 @@ func Self() {
 	install.Recurse = false
 	install.Install(deps)
 	install.Recurse = true
-	util.RunCommand("go install vube/depman")
+	util.RunCommand("go install github.com/vube/depman")
 }
