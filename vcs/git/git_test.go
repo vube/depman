@@ -4,12 +4,12 @@ package git
 
 import (
 	"bytes"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 	. "launchpad.net/gocheck"
 	"log"
 	"os"
 	"testing"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
 )
 
 // Hook up gocheck into the "go test" runner.

@@ -7,12 +7,12 @@ package dep
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/vube/depman/colors"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"strings"
-	"github.com/vube/depman/colors"
 )
 
 // Dependency Types
@@ -65,14 +65,14 @@ func Read(filename string) (deps DependencyMap, err error) {
 		if val.Version == "" {
 			switch val.Type {
 			case TypeGit, TypeGitClone:
-				val.Version="master"	
+				val.Version = "master"
 			case TypeHg:
-				val.Version="default"	
+				val.Version = "default"
 			case TypeBzr:
-				val.Version="trunk"	
+				val.Version = "trunk"
 			default:
-				val.Version=""	
-			}	
+				val.Version = ""
+			}
 			deps.Map[key] = val
 		}
 	}

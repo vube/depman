@@ -4,10 +4,10 @@ package create
 // Copyright 2013 Vubeology, Inc.
 
 import (
-	"io/ioutil"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
+	"io/ioutil"
 )
 
 // Default empty deps.json
