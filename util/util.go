@@ -6,14 +6,14 @@ package util
 
 import (
 	"flag"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	pathPkg "path"
 	"strings"
+	"vube/depman/colors"
+	"vube/depman/dep"
 )
 
 // GLOBALS

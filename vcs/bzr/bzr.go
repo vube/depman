@@ -5,9 +5,9 @@ package bzr
 import (
 	"os/exec"
 	"strings"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
+	"vube/depman/colors"
+	"vube/depman/dep"
+	"vube/depman/util"
 )
 
 // LastCommit retrieves the version number of the last commit on branch

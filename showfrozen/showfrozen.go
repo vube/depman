@@ -2,14 +2,13 @@ package showfrozen
 
 // Copyright 2013 Vubeology, Inc.
 
-
-import "fmt"
-
-import "github.com/vube/depman/dep"
-import "github.com/vube/depman/util"
-import "github.com/vube/depman/vcs"
-import "github.com/vube/depman/colors"
-
+import (
+	"fmt"
+	"vube/depman/colors"
+	"vube/depman/dep"
+	"vube/depman/util"
+	"vube/depman/vcs"
+)
 
 //Read - get top-level frozen dependencies
 func Read(deps dep.DependencyMap) (to_return string) {
@@ -55,7 +54,7 @@ func ReadRecursively(deps dep.DependencyMap, set map[string]string) (to_return s
 		var deps_file string
 		var sub_deps dep.DependencyMap
 
-		if _,ok := set[d.Repo]; ok {
+		if _, ok := set[d.Repo]; ok {
 			continue
 		}
 
