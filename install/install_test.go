@@ -4,12 +4,14 @@ package install
 
 import (
 	"bytes"
+	"log"
+	"testing"
+
+	. "launchpad.net/gocheck"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
-	. "launchpad.net/gocheck"
-	"log"
-	"testing"
 )
 
 // Hook up gocheck into the "go test" runner.
