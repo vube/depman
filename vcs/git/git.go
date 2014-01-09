@@ -3,11 +3,12 @@ package git
 // Copyright 2013 Vubeology, Inc.
 
 import (
+	"os/exec"
+	"strings"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
-	"os/exec"
-	"strings"
 )
 
 // LastCommit retrieves the version number of the last commit on branch

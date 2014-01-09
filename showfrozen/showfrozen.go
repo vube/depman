@@ -4,6 +4,7 @@ package showfrozen
 
 import (
 	"fmt"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
