@@ -11,7 +11,7 @@ import (
 // Self upgrades this version of depman to the latest on the master branch
 func Self() {
 	deps := dep.New()
-	d := dep.Dependency{}
+	d := new(dep.Dependency)
 	d.Repo = "github.com/vube/depman"
 	d.Version = "master"
 	d.Type = "git"

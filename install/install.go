@@ -6,11 +6,11 @@ package install
 
 import (
 	"flag"
+	"fmt"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
-	"github.com/vube/depman/vcs"
-	"github.com/vube/depman/vcs/git"
+	"time"
 )
 
 var clean bool
@@ -32,26 +32,25 @@ func Install(deps dep.DependencyMap) int {
 // recursively install a DependencyMap
 func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int) {
 	for name, d := range deps.Map {
-		util.PrintDep(name, d)
+		start := time.Now()
 
-		if duplicate(d, set) {
-			continue
-		}
+		util.PrintDep(name, d.Version, d.Repo)
 
-		if d.Type == dep.TypeGitClone && d.Alias == "" {
-			util.PrintIndent(colors.Red("Error: Repo '" + name + "' Type '" + d.Type + "' requires 'alias' field (defined in " + deps.Path + ")"))
+		if duplicate(*d, set) {
 			continue
 		}
 
 		subPath := d.Path()
-		if d.Alias == "" {
-			util.RunCommand("go get -u " + d.Repo)
-		} else {
-			git.CloneFetch(d)
+		result += d.VCS.Clone(d)
+		result += util.Cd(subPath)
+
+		if clean {
+			d.VCS.Clean(d)
 		}
 
-		result += util.Cd(subPath)
-		result += vcs.Checkout(d, clean)
+		result += d.VCS.Checkout(d)
+
+		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 
 		// Recursive
 		depsFile := util.UpwardFind(subPath, dep.DepsFile)

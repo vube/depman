@@ -5,11 +5,11 @@ package add
 
 import (
 	"fmt"
-	"strings"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
 	"github.com/vube/depman/util"
+	"strings"
 )
 
 // Add interactively prompts the user for details of a dependency, adds it to deps.json, and writes out the file
@@ -23,7 +23,7 @@ func Add(deps dep.DependencyMap, name string) (result int) {
 	util.Print(colors.Blue("Adding: ") + name)
 
 	for cont {
-		d := dep.Dependency{}
+		d := new(dep.Dependency)
 		d.Type = promptType("Type", "git, git-clone, hg, bzr")
 		if d.Type == dep.TypeGitClone {
 			d.Repo = promptString("Repo", "git url")

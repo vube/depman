@@ -13,7 +13,7 @@ type Hg struct{}
 
 // LastCommit retrieves the version number of the last commit on branch
 // Assumes that the current working directory is in the hg repo
-func (h *Hg) LastCommit(d Dependency, branch string) (hash string, err error) {
+func (h *Hg) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	c := exec.Command("hg", "log", "--template='{node}\n'", "--limit=1")
 	out, err := c.CombinedOutput()
 
@@ -29,34 +29,36 @@ func (h *Hg) LastCommit(d Dependency, branch string) (hash string, err error) {
 	return
 }
 
-func (h *Hg) Clone(d Dependency) (result int) {
-	result = util.RunCommand("hg clone " + d.Repo + " " + d.Path())
+func (h *Hg) Clone(d *Dependency) (result int) {
+	if !util.Exists(d.Path()) {
+		result = util.RunCommand("go get -u " + d.Repo)
+	}
 	return
 }
 
-func (h *Hg) Fetch(d Dependency) (result int) {
+func (h *Hg) Fetch(d *Dependency) (result int) {
 	result = util.RunCommand("hg pull")
 	return
 }
 
-func (h *Hg) Pull(d Dependency) (result int) {
+func (h *Hg) Pull(d *Dependency) (result int) {
 	result = util.RunCommand("hg up")
 	return
 }
 
-func (h *Hg) Checkout(d Dependency) (result int) {
+func (h *Hg) Checkout(d *Dependency) (result int) {
 	util.RunCommand("hg up " + d.Version)
 	return
 }
 
-func (h *Hg) Clean(d Dependency) {
+func (h *Hg) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" hg up --clean "+d.Version))
 	util.RunCommand("hg up --clean " + d.Version)
 	return
 }
 
 //GetHead - Render a revspec to a commit ID
-func (h *Hg) GetHead(d Dependency) (hash string, err error) {
+func (h *Hg) GetHead(d *Dependency) (hash string, err error) {
 	var pwd string
 
 	pwd = util.Pwd()

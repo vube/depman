@@ -8,7 +8,6 @@ import (
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
 	"github.com/vube/depman/util"
-	"github.com/vube/depman/vcs"
 )
 
 // Update rewrites Dependency name in deps.json to use the last commit in branch as version
@@ -24,8 +23,8 @@ func Update(deps dep.DependencyMap, name string, branch string) {
 
 	pwd := util.Pwd()
 	util.Cd(d.Path())
-	vcs.Checkout(d, false)
-	v, err := vcs.LastCommit(d, branch)
+	d.VCS.Checkout(d)
+	v, err := d.VCS.LastCommit(d, branch)
 	if err != nil {
 		util.Fatal(err)
 	}

@@ -26,7 +26,8 @@ const (
 )
 
 var (
-	UnknownTypeError = errors.New("unknown dependency type")
+	ErrUnknownType  = errors.New("unknown dependency type")
+	ErrMissingAlias = errors.New("dependency type git-clone requires alias field")
 )
 
 // The name of the dependency file
@@ -38,37 +39,37 @@ type Dependency struct {
 	Version string         `json:"version"`
 	Type    string         `json:"type"`
 	Alias   string         `json:"alias,omitempty"`
-	VCS     VersionControl `json:"omit"`
+	VCS     VersionControl `json:"-"`
 }
 
 type VersionControl interface {
-	Clone(d Dependency) (result int)
-	Fetch(d Dependency) (result int)
-	Pull(d Dependency) (result int)
+	Clone(d *Dependency) (result int)
+	Fetch(d *Dependency) (result int)
+	Pull(d *Dependency) (result int)
 
-	Checkout(d Dependency) (result int)
+	Checkout(d *Dependency) (result int)
 
-	LastCommit(d Dependency, branch string) (hash string, err error)
-	GetHead(d Dependency) (to_return string, err error)
+	LastCommit(d *Dependency, branch string) (hash string, err error)
+	GetHead(d *Dependency) (to_return string, err error)
 
-	Clean(d Dependency)
+	Clean(d *Dependency)
 }
 
 // DependencyMap defines a set of dependencies
 type DependencyMap struct {
-	Map  map[string]Dependency
+	Map  map[string]*Dependency
 	Path string
 }
 
 // New returns a newly constructed DependencyMap
 func New() (d DependencyMap) {
-	d.Map = make(map[string]Dependency)
+	d.Map = make(map[string]*Dependency)
 	return
 }
 
 // Read reads filename and parses the content into a DependencyMap
 func Read(filename string) (deps DependencyMap, err error) {
-	deps.Map = make(map[string]Dependency)
+	deps.Map = make(map[string]*Dependency)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return
@@ -79,11 +80,12 @@ func Read(filename string) (deps DependencyMap, err error) {
 	}
 	deps.Path = filename
 
-	for i, d := range deps.Map {
-		err := d.setupVCS()
+	for name, d := range deps.Map {
+		err := d.setupVCS(name)
 		if err != nil {
-			delete(deps.Map, i)
+			delete(deps.Map, name)
 		}
+
 	}
 
 	return
@@ -104,9 +106,17 @@ func (d *DependencyMap) Write() (err error) {
 }
 
 // Configures the VCS depending on the type
-func (d *Dependency) setupVCS() (err error) {
+func (d *Dependency) setupVCS(name string) (err error) {
 	switch d.Type {
-	case TypeGit, TypeGitClone:
+	case TypeGitClone:
+		if d.Alias == "" {
+			util.PrintIndent(colors.Red("Error: Dependency " + name + ": Repo '" + d.Repo + "' Type '" + d.Type + "' requires 'alias' field"))
+			err = ErrMissingAlias
+			return
+		}
+
+		d.VCS = new(Git)
+	case TypeGit:
 		d.VCS = new(Git)
 	case TypeBzr:
 		d.VCS = new(Bzr)
@@ -115,7 +125,7 @@ func (d *Dependency) setupVCS() (err error) {
 	default:
 		util.PrintIndent(colors.Red(d.Repo + ": Unknown repository type (" + d.Type + "), skipping..."))
 		util.PrintIndent(colors.Red("Valid Repository types: " + TypeGit + ", " + TypeHg + ", " + TypeBzr + ", " + TypeGitClone))
-		err = UnknownTypeError
+		err = ErrUnknownType
 	}
 
 	return

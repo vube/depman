@@ -13,22 +13,20 @@ import (
 type Git struct{}
 
 // Checkout uses the appropriate VCS to checkout the specified version of the code
-func (g *Git) Checkout(d Dependency) (result int) {
+func (g *Git) Checkout(d *Dependency) (result int) {
 
 	if util.RunCommand("git checkout "+d.Version) != 0 {
 		util.RunCommand("git fetch")
 		util.RunCommand("git checkout " + d.Version)
 	}
 
-	if g.isBranch(d.Version) {
-		util.RunCommand("git pull origin " + d.Version)
-	}
+	g.Pull(d)
 	return
 }
 
 // LastCommit retrieves the version number of the last commit on branch
 // Assumes that the current working directory is in the git repo
-func (g *Git) LastCommit(d Dependency, branch string) (hash string, err error) {
+func (g *Git) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	if !g.isBranch(branch) {
 		err = errors.New("Branch '" + branch + "' is not a valid branch")
 		return
@@ -50,7 +48,7 @@ func (g *Git) LastCommit(d Dependency, branch string) (hash string, err error) {
 }
 
 //GetHead - Render a revspec to a commit ID
-func (g *Git) GetHead(d Dependency) (hash string, err error) {
+func (g *Git) GetHead(d *Dependency) (hash string, err error) {
 	var pwd string
 
 	pwd = util.Pwd()
@@ -111,28 +109,31 @@ func (g *Git) isBranch(name string) (result bool) {
 }
 
 // CloneFetch will clone d.Repo into d.Path() if d.Path does not exist, otherwise it will cd to d.Path() and run git fetch
-func (g *Git) Clone(d Dependency) (result int) {
+func (g *Git) Clone(d *Dependency) (result int) {
 	if !util.Exists(d.Path()) {
-		result = util.RunCommand("git clone " + d.Repo + " " + d.Path())
-	} else {
-		result += g.Fetch(d)
+		if d.Type == TypeGitClone {
+			result = util.RunCommand("git clone " + d.Repo + " " + d.Path())
+		} else {
+			result = util.RunCommand("go get -u " + d.Repo)
+		}
 	}
 	return
 }
 
-func (g *Git) Fetch(d Dependency) (result int) {
+func (g *Git) Fetch(d *Dependency) (result int) {
 	result = util.Cd(d.Path())
 	result += util.RunCommand("git fetch")
 	return
 }
 
-func (g *Git) Pull(d Dependency) (result int) {
-	result = util.Cd(d.Path())
-	result += util.RunCommand("git pull")
+func (g *Git) Pull(d *Dependency) (result int) {
+	if g.isBranch(d.Version) {
+		util.RunCommand("git pull origin " + d.Version)
+	}
 	return
 }
 
-func (g *Git) Clean(d Dependency) {
+func (g *Git) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" git reset --hard HEAD"))
 	util.RunCommand("git reset --hard HEAD")
 	util.RunCommand("git clean -f")

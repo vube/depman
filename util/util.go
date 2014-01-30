@@ -7,12 +7,10 @@ package util
 import (
 	"flag"
 	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 	"io"
 	"log"
 	"os"
 	"os/exec"
-	pathPkg "path"
 	"strings"
 )
 
@@ -84,15 +82,6 @@ func Parse() {
 		verbose = true
 		logger.SetFlags(log.Lshortfile)
 	}
-}
-
-//GetPath processes p and returns a clean path ending in deps.json
-func GetPath(p string) (path string) {
-	if !strings.HasSuffix(p, dep.DepsFile) {
-		path = p + "/" + dep.DepsFile
-	}
-	path = pathPkg.Clean(path)
-	return
 }
 
 // Version displays the version of depman and optionally exits (--version)
@@ -193,17 +182,6 @@ func defaultIndent() (res string) {
 	return
 }
 
-// PrintDep displays a dependency based on the --silent and --verbose flags
-func PrintDep(name string, d dep.Dependency) {
-	if !silent {
-		if verbose {
-			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+d.Version+")")+" "+d.Repo)
-		} else {
-			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+d.Version+")"))
-		}
-	}
-}
-
 // CheckPath causes the application to exit if path does not exist
 func CheckPath(path string) {
 	if !Exists(path) {
@@ -262,4 +240,15 @@ func Debug(s string) {
 // SetVerbose sets the verbose level for testing
 func SetVerbose(v bool) {
 	verbose = v
+}
+
+// PrintDep displays a dependency based on the --silent and --verbose flags
+func PrintDep(name string, version string, repo string) {
+	if !silent {
+		if verbose {
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")")+" "+repo)
+		} else {
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")"))
+		}
+	}
 }

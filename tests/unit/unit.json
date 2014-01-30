@@ -2,16 +2,16 @@
 	"one": {
 		"repo": "repo_one",
 		"version": "1",
-		"type":"t"
+		"type":"git"
 	},
 	"two": {
 		"repo": "repo_two",
 		"version": "2",
-		"type":"t"
+		"type":"git"
 	},
 	"three": {
 		"repo": "repo_three",
 		"version": "3",
-		"type":"t"
+		"type":"git"
 	}
 }
