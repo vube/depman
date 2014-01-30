@@ -10,22 +10,22 @@ package main
 
 import (
 	"flag"
-	"log"
-	"strings"
 	"fmt"
 	"github.com/vube/depman/add"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/create"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
+	"github.com/vube/depman/showfrozen"
 	"github.com/vube/depman/update"
 	"github.com/vube/depman/upgrade"
 	"github.com/vube/depman/util"
-	"github.com/vube/depman/showfrozen"
+	"log"
+	"strings"
 )
 
 // Version number
-const VERSION string = "2.5.1"
+const VERSION string = "2.6.0"
 
 //===============================================
 
@@ -46,7 +46,7 @@ func main() {
 
 	util.Version(VERSION)
 
-	path = util.GetPath(path)
+	path = dep.GetPath(path)
 
 	if flag.NArg() > 0 {
 		command = strings.ToLower(flag.Arg(0))
