@@ -1,4 +1,4 @@
-package git
+package vcs
 
 // Copyright 2013 Vubeology, Inc.
 
