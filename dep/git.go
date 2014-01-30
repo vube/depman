@@ -1,18 +1,39 @@
-package vcs
+package dep
 
 // Copyright 2013 Vubeology, Inc.
 
 import (
+	"errors"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 	"os/exec"
 	"strings"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
 )
+
+type Git struct{}
+
+// Checkout uses the appropriate VCS to checkout the specified version of the code
+func (g *Git) Checkout(d Dependency) (result int) {
+
+	if util.RunCommand("git checkout "+d.Version) != 0 {
+		util.RunCommand("git fetch")
+		util.RunCommand("git checkout " + d.Version)
+	}
+
+	if g.isBranch(d.Version) {
+		util.RunCommand("git pull origin " + d.Version)
+	}
+	return
+}
 
 // LastCommit retrieves the version number of the last commit on branch
 // Assumes that the current working directory is in the git repo
-func LastCommit(d dep.Dependency, branch string) (hash string) {
+func (g *Git) LastCommit(d Dependency, branch string) (hash string, err error) {
+	if !g.isBranch(branch) {
+		err = errors.New("Branch '" + branch + "' is not a valid branch")
+		return
+	}
+
 	c := exec.Command("git", "log", "-1", "--format=%h")
 	out, err := c.CombinedOutput()
 
@@ -29,7 +50,7 @@ func LastCommit(d dep.Dependency, branch string) (hash string) {
 }
 
 //GetHead - Render a revspec to a commit ID
-func GetHead(d dep.Dependency) (hash string, err error) {
+func (g *Git) GetHead(d Dependency) (hash string, err error) {
 	var pwd string
 
 	pwd = util.Pwd()
@@ -57,7 +78,7 @@ func GetHead(d dep.Dependency) (hash string, err error) {
 
 // IsBranch determines if a version (branch, commit hash, tag) is a branch (i.e. can we pull from the remote).
 // Assumes we are already in a sub directory of the repo
-func IsBranch(name string) (result bool) {
+func (g *Git) isBranch(name string) (result bool) {
 	c := exec.Command("git", "branch", "-r")
 	out, err := c.CombinedOutput()
 
@@ -90,12 +111,29 @@ func IsBranch(name string) (result bool) {
 }
 
 // CloneFetch will clone d.Repo into d.Path() if d.Path does not exist, otherwise it will cd to d.Path() and run git fetch
-func CloneFetch(d dep.Dependency) (result int) {
+func (g *Git) Clone(d Dependency) (result int) {
 	if !util.Exists(d.Path()) {
 		result = util.RunCommand("git clone " + d.Repo + " " + d.Path())
 	} else {
-		result = util.Cd(d.Path())
-		result += util.RunCommand("git fetch")
+		result += g.Fetch(d)
 	}
 	return
+}
+
+func (g *Git) Fetch(d Dependency) (result int) {
+	result = util.Cd(d.Path())
+	result += util.RunCommand("git fetch")
+	return
+}
+
+func (g *Git) Pull(d Dependency) (result int) {
+	result = util.Cd(d.Path())
+	result += util.RunCommand("git pull")
+	return
+}
+
+func (g *Git) Clean(d Dependency) {
+	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" git reset --hard HEAD"))
+	util.RunCommand("git reset --hard HEAD")
+	util.RunCommand("git clean -f")
 }

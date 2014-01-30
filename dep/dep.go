@@ -7,12 +7,14 @@ package dep
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
 	"strings"
-	"github.com/vube/depman/colors"
 )
 
 // Dependency Types
@@ -23,15 +25,33 @@ const (
 	TypeGitClone = "git-clone"
 )
 
+var (
+	UnknownTypeError = errors.New("unknown dependency type")
+)
+
 // The name of the dependency file
 const DepsFile string = "deps.json"
 
 // Dependency defines a single dependency
 type Dependency struct {
-	Repo    string `json:"repo"`
-	Version string `json:"version"`
-	Type    string `json:"type"`
-	Alias   string `json:"alias,omitempty"`
+	Repo    string         `json:"repo"`
+	Version string         `json:"version"`
+	Type    string         `json:"type"`
+	Alias   string         `json:"alias,omitempty"`
+	VCS     VersionControl `json:"omit"`
+}
+
+type VersionControl interface {
+	Clone(d Dependency) (result int)
+	Fetch(d Dependency) (result int)
+	Pull(d Dependency) (result int)
+
+	Checkout(d Dependency) (result int)
+
+	LastCommit(d Dependency, branch string) (hash string, err error)
+	GetHead(d Dependency) (to_return string, err error)
+
+	Clean(d Dependency)
 }
 
 // DependencyMap defines a set of dependencies
@@ -58,6 +78,14 @@ func Read(filename string) (deps DependencyMap, err error) {
 		return
 	}
 	deps.Path = filename
+
+	for i, d := range deps.Map {
+		err := d.setupVCS()
+		if err != nil {
+			delete(deps.Map, i)
+		}
+	}
+
 	return
 }
 
@@ -72,6 +100,24 @@ func (d *DependencyMap) Write() (err error) {
 		data := []byte(buf.String() + "\n")
 		ioutil.WriteFile(d.Path, data, 0644)
 	}
+	return
+}
+
+// Configures the VCS depending on the type
+func (d *Dependency) setupVCS() (err error) {
+	switch d.Type {
+	case TypeGit, TypeGitClone:
+		d.VCS = new(Git)
+	case TypeBzr:
+		d.VCS = new(Bzr)
+	case TypeHg:
+		d.VCS = new(Hg)
+	default:
+		util.PrintIndent(colors.Red(d.Repo + ": Unknown repository type (" + d.Type + "), skipping..."))
+		util.PrintIndent(colors.Red("Valid Repository types: " + TypeGit + ", " + TypeHg + ", " + TypeBzr + ", " + TypeGitClone))
+		err = UnknownTypeError
+	}
+
 	return
 }
 
@@ -92,4 +138,13 @@ func (d *Dependency) Path() (p string) {
 
 	return
 
+}
+
+//GetPath processes p and returns a clean path ending in deps.json
+func GetPath(p string) (result string) {
+	if !strings.HasSuffix(p, DepsFile) {
+		result = p + "/" + DepsFile
+	}
+	result = path.Clean(result)
+	return
 }

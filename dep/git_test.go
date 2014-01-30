@@ -1,29 +1,23 @@
-package vcs
+package dep
 
 // Copyright 2013 Vubeology, Inc.
 
 import (
 	"bytes"
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 	. "launchpad.net/gocheck"
 	"log"
 	"os"
-	"testing"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
 )
 
-// Hook up gocheck into the "go test" runner.
-func Test(t *testing.T) {
-	TestingT(t)
-}
-
-type TestSuite struct {
+type GitSuite struct {
 	buf *bytes.Buffer
 }
 
-var _ = Suite(&TestSuite{})
+var _ = Suite(&GitSuite{})
 
-func (s *TestSuite) SetUpTest(c *C) {
+func (s *GitSuite) SetUpTest(c *C) {
 	colors.Mock()
 	b := []byte{}
 	s.buf = bytes.NewBuffer(b)
@@ -31,17 +25,18 @@ func (s *TestSuite) SetUpTest(c *C) {
 	log.SetFlags(0)
 }
 
-func (s *TestSuite) TestIsGitBranch(c *C) {
+func (s *GitSuite) TestIsGitBranch(c *C) {
+	g := new(Git)
 
 	util.Cd(os.Getenv("GOPATH") + "/src/github.com/vube/depman")
-	c.Check(IsBranch("master"), Equals, true)
+	c.Check(g.isBranch("master"), Equals, true)
 
-	c.Check(IsBranch("2.1.0"), Equals, false)
-	c.Check(IsBranch("7da42054c10f55d5f479b84f59013818ccbd1fd7"), Equals, false)
+	c.Check(g.isBranch("2.1.0"), Equals, false)
+	c.Check(g.isBranch("7da42054c10f55d5f479b84f59013818ccbd1fd7"), Equals, false)
 
 	util.Cd("/")
 
-	c.Check(IsBranch("master"), Equals, false)
+	c.Check(g.isBranch("master"), Equals, false)
 	output := "pwd: /\n" +
 		"git branch -r\n" +
 		"fatal: Not a git repository (or any of the parent directories): .git\n" +

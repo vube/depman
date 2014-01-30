@@ -8,16 +8,18 @@ import (
 )
 
 // Hook up gocheck into the "go test" runner.
-func Test(t *testing.T) {
+func TestDep(t *testing.T) {
 	TestingT(t)
 }
 
-type TestSuite struct{}
+type DepSuite struct{}
 
-var _ = Suite(&TestSuite{})
+var _ = Suite(&DepSuite{})
 
-func (s *TestSuite) TestRead(c *C) {
+func (s *DepSuite) TestRead(c *C) {
+
 	deps, err := Read("../tests/unit/unit.json")
+
 	c.Assert(err, IsNil)
 	c.Assert(len(deps.Map), Equals, 3)
 
@@ -25,19 +27,19 @@ func (s *TestSuite) TestRead(c *C) {
 	c.Check(ok, Equals, true)
 	c.Check(d.Repo, Equals, "repo_one")
 	c.Check(d.Version, Equals, "1")
-	c.Check(d.Type, Equals, "t")
+	c.Check(d.Type, Equals, "git")
 
 	d, ok = deps.Map["two"]
 	c.Check(ok, Equals, true)
 	c.Check(d.Repo, Equals, "repo_two")
 	c.Check(d.Version, Equals, "2")
-	c.Check(d.Type, Equals, "t")
+	c.Check(d.Type, Equals, "git")
 
 	d, ok = deps.Map["three"]
 	c.Check(ok, Equals, true)
 	c.Check(d.Repo, Equals, "repo_three")
 	c.Check(d.Version, Equals, "3")
-	c.Check(d.Type, Equals, "t")
+	c.Check(d.Type, Equals, "git")
 
 	deps, err = Read("./tests/unit/none")
 	c.Check(err, ErrorMatches, "open ./tests/unit/none: no such file or directory")
