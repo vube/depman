@@ -6,6 +6,7 @@ package install
 
 import (
 	"flag"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"

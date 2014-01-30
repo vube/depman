@@ -4,13 +4,14 @@ package util
 
 import (
 	"bytes"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 	"io/ioutil"
 	. "launchpad.net/gocheck"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/dep"
 )
 
 // Hook up gocheck into the "go test" runner.

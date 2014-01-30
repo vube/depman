@@ -6,6 +6,7 @@ package add
 import (
 	"fmt"
 	"strings"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
