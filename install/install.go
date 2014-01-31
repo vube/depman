@@ -13,13 +13,17 @@ import (
 	"time"
 )
 
-var clean bool
+var (
+	clean bool
+	pull  bool
+)
 
 // Whether to install recursively
 var Recurse = true
 
 func init() {
 	flag.BoolVar(&clean, "clean", false, "Remove changes to code in dependencies")
+	flag.BoolVar(&pull, "pull", false, "Update the dependency from the remote server")
 }
 
 // Install a DependencyMap
@@ -49,6 +53,10 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 		}
 
 		result += d.VCS.Checkout(d)
+
+		if pull {
+			result += d.VCS.Pull(d)
+		}
 
 		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 

@@ -13,7 +13,7 @@ type Bzr struct{}
 
 // LastCommit retrieves the version number of the last commit on branch
 // Assumes that the current working directory is in the bzr repo
-func LastCommit(d *Dependency, branch string) (hash string, err error) {
+func (b *Bzr) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	c := exec.Command("bzr", "log", "--line")
 	out, err := c.CombinedOutput()
 
@@ -30,7 +30,7 @@ func LastCommit(d *Dependency, branch string) (hash string, err error) {
 }
 
 //GetHead - Render a revspec to a commit ID
-func GetHead(d *Dependency) (hash string, err error) {
+func (b *Bzr) GetHead(d *Dependency) (hash string, err error) {
 	var pwd string
 
 	pwd = util.Pwd()
@@ -38,9 +38,7 @@ func GetHead(d *Dependency) (hash string, err error) {
 
 	{
 		var out_bytes []byte
-
 		out_bytes, err = exec.Command("bzr", "revno", d.Version).CombinedOutput()
-
 		hash = strings.TrimSuffix(string(out_bytes), "\n")
 	}
 
@@ -64,24 +62,13 @@ func (b *Bzr) Clone(d *Dependency) (result int) {
 	return
 }
 
-func (b *Bzr) Fetch(d *Dependency) (result int) {
-	return
-}
-
 func (b *Bzr) Pull(d *Dependency) (result int) {
+	result = util.RunCommand("bzr pull")
 	return
 }
 
 func (b *Bzr) Checkout(d *Dependency) (result int) {
 	util.RunCommand("bzr up --revision " + d.Version)
-	return
-}
-
-func (b *Bzr) LastCommit(d *Dependency, branch string) (hash string, err error) {
-	return
-}
-
-func (b *Bzr) GetHead(d *Dependency) (to_return string, err error) {
 	return
 }
 

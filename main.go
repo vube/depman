@@ -1,7 +1,11 @@
 // Dependency Manager for Golang Projects
 // Author: Nicholas Capo <nicholas@vubeology.com>
 //
+//
+// Installation: `go get github.com/vube/depman`
+//
 // For help run 'depman help'
+//
 package main
 
 // Copyright 2013 Vubeology, Inc.
@@ -127,13 +131,13 @@ func main() {
 func Help() {
 	log.Println("")
 	log.Println("Commands:")
-	log.Println("   Init                        : Create an empty deps.json (not yet implemented)")
+	log.Println("   Init                        : Create an empty deps.json")
 	log.Println("   Add [nickname]              : Add a dependency (interactive)")
 	log.Println("   Install                     : Install all the dependencies listed in deps.json (default)")
 	log.Println("   Update [nickname] [branch]  : Update [nickname] to use the latest commit in [branch]")
 	log.Println("   Self-Upgrade                : Upgrade depman to the latest version on the master branch")
 	log.Println("   Help                        : Display this help")
-	log.Println("   show-frozen                 : Show dependencies as resolved to commit IDs")
+	log.Println("   Show-Frozen                 : Show dependencies as resolved to commit IDs")
 	log.Println("")
 	log.Println("Example: depman --verbose install")
 	log.Println("")

@@ -13,7 +13,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -44,9 +44,7 @@ type Dependency struct {
 
 type VersionControl interface {
 	Clone(d *Dependency) (result int)
-	Fetch(d *Dependency) (result int)
 	Pull(d *Dependency) (result int)
-
 	Checkout(d *Dependency) (result int)
 
 	LastCommit(d *Dependency, branch string) (hash string, err error)
@@ -81,7 +79,7 @@ func Read(filename string) (deps DependencyMap, err error) {
 	deps.Path = filename
 
 	for name, d := range deps.Map {
-		err := d.setupVCS(name)
+		err := d.SetupVCS(name)
 		if err != nil {
 			delete(deps.Map, name)
 		}
@@ -106,7 +104,7 @@ func (d *DependencyMap) Write() (err error) {
 }
 
 // Configures the VCS depending on the type
-func (d *Dependency) setupVCS(name string) (err error) {
+func (d *Dependency) SetupVCS(name string) (err error) {
 	switch d.Type {
 	case TypeGitClone:
 		if d.Alias == "" {
@@ -138,12 +136,12 @@ func (d *Dependency) Path() (p string) {
 		log.Fatal(colors.Red("You must set GOPATH"))
 	}
 
-	p = path.Join(goPath, "src")
+	p = filepath.Join(goPath, "src")
 
 	if d.Alias == "" {
-		p = path.Join(p, d.Repo)
+		p = filepath.Join(p, d.Repo)
 	} else {
-		p = path.Join(p, d.Alias)
+		p = filepath.Join(p, d.Alias)
 	}
 
 	return
@@ -155,6 +153,6 @@ func GetPath(p string) (result string) {
 	if !strings.HasSuffix(p, DepsFile) {
 		result = p + "/" + DepsFile
 	}
-	result = path.Clean(result)
+	result = filepath.Clean(result)
 	return
 }

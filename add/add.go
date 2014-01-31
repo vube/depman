@@ -38,6 +38,14 @@ func Add(deps dep.DependencyMap, name string) (result int) {
 		cont = promptBool("Add another", "y/N")
 	}
 
+	for name, d := range deps.Map {
+		err := d.SetupVCS(name)
+		if err != nil {
+			delete(deps.Map, name)
+		}
+
+	}
+
 	err := deps.Write()
 	if err != nil {
 		util.Fatal(colors.Red("Error Writing " + deps.Path + ": " + err.Error()))

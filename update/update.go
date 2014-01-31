@@ -24,6 +24,7 @@ func Update(deps dep.DependencyMap, name string, branch string) {
 	pwd := util.Pwd()
 	util.Cd(d.Path())
 	d.VCS.Checkout(d)
+	d.VCS.Pull(d)
 	v, err := d.VCS.LastCommit(d, branch)
 	if err != nil {
 		util.Fatal(err)

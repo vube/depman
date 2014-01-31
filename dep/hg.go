@@ -36,13 +36,9 @@ func (h *Hg) Clone(d *Dependency) (result int) {
 	return
 }
 
-func (h *Hg) Fetch(d *Dependency) (result int) {
-	result = util.RunCommand("hg pull")
-	return
-}
-
 func (h *Hg) Pull(d *Dependency) (result int) {
-	result = util.RunCommand("hg up")
+	result += util.RunCommand("hg pull")
+	result += util.RunCommand("hg up")
 	return
 }
 
@@ -66,9 +62,7 @@ func (h *Hg) GetHead(d *Dependency) (hash string, err error) {
 
 	{
 		var out_bytes []byte
-
 		out_bytes, err = exec.Command("hg", "id", "-i", d.Version).CombinedOutput()
-
 		hash = strings.TrimSuffix(string(out_bytes), "\n")
 	}
 

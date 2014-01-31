@@ -15,6 +15,7 @@ func Self() {
 	d.Repo = "github.com/vube/depman"
 	d.Version = "master"
 	d.Type = "git"
+	d.SetupVCS("depman")
 
 	deps.Map["depman"] = d
 
