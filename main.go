@@ -21,6 +21,7 @@ import (
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
 	"github.com/vube/depman/showfrozen"
+	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/update"
 	"github.com/vube/depman/upgrade"
 	"github.com/vube/depman/util"
@@ -49,6 +50,8 @@ func main() {
 	util.Parse()
 
 	util.Version(VERSION)
+
+	timelock.Read()
 
 	path = dep.GetPath(path)
 
@@ -121,6 +124,8 @@ func main() {
 	if result == 0 {
 		util.Print("Success")
 	}
+
+	timelock.Write()
 
 	util.OsExit(result)
 }

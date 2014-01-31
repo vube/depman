@@ -183,11 +183,21 @@ func (s *TestSuite) TestPrintDep(c *C) {
 	buf := bytes.NewBuffer(b)
 	Mock(buf)
 
-	PrintDep("NNN", "version", "repo")
+	PrintDep("NNN", "version", "repo", false)
 	c.Check(buf.String(), Equals, "NNN (version)\n")
 
 	buf.Truncate(0)
 	verbose = true
-	PrintDep("NNN", "version", "repo")
+	PrintDep("NNN", "version", "repo", false)
 	c.Check(buf.String(), Equals, "NNN (version) repo\n")
+
+	buf.Truncate(0)
+	verbose = true
+	PrintDep("NNN", "version", "repo", true)
+	c.Check(buf.String(), Equals, "NNN (version) repo *\n")
+
+	buf.Truncate(0)
+	verbose = false
+	PrintDep("NNN", "version", "repo", true)
+	c.Check(buf.String(), Equals, "NNN (version) *\n")
 }

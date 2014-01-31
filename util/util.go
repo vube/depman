@@ -243,12 +243,18 @@ func SetVerbose(v bool) {
 }
 
 // PrintDep displays a dependency based on the --silent and --verbose flags
-func PrintDep(name string, version string, repo string) {
+func PrintDep(name string, version string, repo string, stale bool) {
+	var staleMarker string
+
+	if stale {
+		staleMarker = " *"
+	}
+
 	if !silent {
 		if verbose {
-			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")")+" "+repo)
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")")+" "+repo+staleMarker)
 		} else {
-			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")"))
+			logger.Output(2, indent()+colors.Blue(name)+colors.Yellow(" ("+version+")")+staleMarker)
 		}
 	}
 }

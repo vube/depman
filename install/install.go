@@ -9,13 +9,13 @@ import (
 	"fmt"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
+	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/util"
 	"time"
 )
 
 var (
 	clean bool
-	pull  bool
 )
 
 // Whether to install recursively
@@ -23,7 +23,6 @@ var Recurse = true
 
 func init() {
 	flag.BoolVar(&clean, "clean", false, "Remove changes to code in dependencies")
-	flag.BoolVar(&pull, "pull", false, "Update the dependency from the remote server")
 }
 
 // Install a DependencyMap
@@ -38,11 +37,13 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 	for name, d := range deps.Map {
 		start := time.Now()
 
-		util.PrintDep(name, d.Version, d.Repo)
-
 		if duplicate(*d, set) {
 			continue
 		}
+
+		stale := timelock.IsStale(d.Repo)
+
+		util.PrintDep(name, d.Version, d.Repo, stale)
 
 		subPath := d.Path()
 		result += d.VCS.Clone(d)
@@ -52,11 +53,12 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 			d.VCS.Clean(d)
 		}
 
-		result += d.VCS.Checkout(d)
-
-		if pull {
+		if stale {
+			util.VerboseIndent(" # repo is stale, pulling")
 			result += d.VCS.Pull(d)
 		}
+
+		result += d.VCS.Checkout(d)
 
 		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 
