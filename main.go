@@ -1,7 +1,11 @@
 // Dependency Manager for Golang Projects
 // Author: Nicholas Capo <nicholas@vubeology.com>
 //
+//
+// Installation: `go get github.com/vube/depman`
+//
 // For help run 'depman help'
+//
 package main
 
 // Copyright 2013 Vubeology, Inc.
@@ -11,22 +15,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/vube/depman/add"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/create"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
 	"github.com/vube/depman/showfrozen"
+	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/update"
 	"github.com/vube/depman/upgrade"
 	"github.com/vube/depman/util"
+	"log"
+	"strings"
 )
 
 // Version number
-const VERSION string = "2.5.2"
+const VERSION string = "2.6.0"
 
 //===============================================
 
@@ -47,7 +51,9 @@ func main() {
 
 	util.Version(VERSION)
 
-	path = util.GetPath(path)
+	timelock.Read()
+
+	path = dep.GetPath(path)
 
 	if flag.NArg() > 0 {
 		command = strings.ToLower(flag.Arg(0))
@@ -119,6 +125,8 @@ func main() {
 		util.Print("Success")
 	}
 
+	timelock.Write()
+
 	util.OsExit(result)
 }
 
@@ -128,13 +136,13 @@ func main() {
 func Help() {
 	log.Println("")
 	log.Println("Commands:")
-	log.Println("   Init                        : Create an empty deps.json (not yet implemented)")
+	log.Println("   Init                        : Create an empty deps.json")
 	log.Println("   Add [nickname]              : Add a dependency (interactive)")
 	log.Println("   Install                     : Install all the dependencies listed in deps.json (default)")
 	log.Println("   Update [nickname] [branch]  : Update [nickname] to use the latest commit in [branch]")
 	log.Println("   Self-Upgrade                : Upgrade depman to the latest version on the master branch")
 	log.Println("   Help                        : Display this help")
-	log.Println("   show-frozen                 : Show dependencies as resolved to commit IDs")
+	log.Println("   Show-Frozen                 : Show dependencies as resolved to commit IDs")
 	log.Println("")
 	log.Println("Example: depman --verbose install")
 	log.Println("")

@@ -1,19 +1,19 @@
-package bzr
+package dep
 
 // Copyright 2013 Vubeology, Inc.
 
 import (
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 	"os/exec"
 	"strings"
-
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
 )
+
+type Bzr struct{}
 
 // LastCommit retrieves the version number of the last commit on branch
 // Assumes that the current working directory is in the bzr repo
-func LastCommit(d dep.Dependency, branch string) (hash string) {
+func (b *Bzr) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	c := exec.Command("bzr", "log", "--line")
 	out, err := c.CombinedOutput()
 
@@ -30,7 +30,7 @@ func LastCommit(d dep.Dependency, branch string) (hash string) {
 }
 
 //GetHead - Render a revspec to a commit ID
-func GetHead(d dep.Dependency) (hash string, err error) {
+func (b *Bzr) GetHead(d *Dependency) (hash string, err error) {
 	var pwd string
 
 	pwd = util.Pwd()
@@ -38,9 +38,7 @@ func GetHead(d dep.Dependency) (hash string, err error) {
 
 	{
 		var out_bytes []byte
-
 		out_bytes, err = exec.Command("bzr", "revno", d.Version).CombinedOutput()
-
 		hash = strings.TrimSuffix(string(out_bytes), "\n")
 	}
 
@@ -54,5 +52,26 @@ func GetHead(d dep.Dependency) (hash string, err error) {
 		util.Fatal("")
 	}
 
+	return
+}
+
+func (b *Bzr) Clone(d *Dependency) (result int) {
+	if !util.Exists(d.Path()) {
+		result = util.RunCommand("go get -u " + d.Repo)
+	}
+	return
+}
+
+func (b *Bzr) Pull(d *Dependency) (result int) {
+	result = util.RunCommand("bzr pull")
+	return
+}
+
+func (b *Bzr) Checkout(d *Dependency) (result int) {
+	util.RunCommand("bzr up --revision " + d.Version)
+	return
+}
+
+func (b *Bzr) Clean(d *Dependency) {
 	return
 }

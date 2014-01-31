@@ -2,19 +2,16 @@ package showfrozen
 
 // Copyright 2013 Vubeology, Inc.
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
-	"github.com/vube/depman/util"
-	"github.com/vube/depman/vcs"
-)
+import "github.com/vube/depman/dep"
+import "github.com/vube/depman/util"
+import "github.com/vube/depman/colors"
 
 //Read - get top-level frozen dependencies
 func Read(deps dep.DependencyMap) (to_return string) {
 	var err error
-	var to_return_agg = make(map[string]dep.Dependency)
+	var to_return_agg = make(map[string]*dep.Dependency)
 
 	util.Print(colors.Yellow("NOTE: This will not reflect the state of the remote unless you have just run `depman install`."))
 
@@ -24,7 +21,7 @@ func Read(deps dep.DependencyMap) (to_return string) {
 			continue
 		}
 
-		v.Version, err = vcs.GetHead(v)
+		v.Version, err = v.VCS.GetHead(v)
 		if err != nil {
 			util.Fatal(err)
 		}
@@ -67,7 +64,7 @@ func ReadRecursively(deps dep.DependencyMap, set map[string]string) (to_return s
 		{
 			var temp string
 
-			temp, err = vcs.GetHead(d)
+			temp, err = d.VCS.GetHead(d)
 			if err != nil {
 				util.Fatal(err)
 			}

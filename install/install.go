@@ -6,15 +6,17 @@ package install
 
 import (
 	"flag"
-
+	"fmt"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
+	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/util"
-	"github.com/vube/depman/vcs"
-	"github.com/vube/depman/vcs/git"
+	"time"
 )
 
-var clean bool
+var (
+	clean bool
+)
 
 // Whether to install recursively
 var Recurse = true
@@ -33,26 +35,32 @@ func Install(deps dep.DependencyMap) int {
 // recursively install a DependencyMap
 func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int) {
 	for name, d := range deps.Map {
-		util.PrintDep(name, d)
+		start := time.Now()
 
-		if duplicate(d, set) {
+		if duplicate(*d, set) {
 			continue
 		}
 
-		if d.Type == dep.TypeGitClone && d.Alias == "" {
-			util.PrintIndent(colors.Red("Error: Repo '" + name + "' Type '" + d.Type + "' requires 'alias' field (defined in " + deps.Path + ")"))
-			continue
-		}
+		stale := timelock.IsStale(d.Repo)
+
+		util.PrintDep(name, d.Version, d.Repo, stale)
 
 		subPath := d.Path()
-		if d.Alias == "" {
-			util.RunCommand("go get -u " + d.Repo)
-		} else {
-			git.CloneFetch(d)
+		result += d.VCS.Clone(d)
+		result += util.Cd(subPath)
+
+		if clean {
+			d.VCS.Clean(d)
 		}
 
-		result += util.Cd(subPath)
-		result += vcs.Checkout(d, clean)
+		if stale {
+			util.VerboseIndent(" # repo is stale, pulling")
+			result += d.VCS.Pull(d)
+		}
+
+		result += d.VCS.Checkout(d)
+
+		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 
 		// Recursive
 		depsFile := util.UpwardFind(subPath, dep.DepsFile)

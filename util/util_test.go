@@ -4,14 +4,12 @@ package util
 
 import (
 	"bytes"
+	"github.com/vube/depman/colors"
 	"io/ioutil"
 	. "launchpad.net/gocheck"
 	"log"
 	"os"
 	"testing"
-
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/dep"
 )
 
 // Hook up gocheck into the "go test" runner.
@@ -185,12 +183,21 @@ func (s *TestSuite) TestPrintDep(c *C) {
 	buf := bytes.NewBuffer(b)
 	Mock(buf)
 
-	d := dep.Dependency{Repo: "repo", Version: "version", Type: "type"}
-	PrintDep("NNN", d)
+	PrintDep("NNN", "version", "repo", false)
 	c.Check(buf.String(), Equals, "NNN (version)\n")
 
 	buf.Truncate(0)
 	verbose = true
-	PrintDep("NNN", d)
+	PrintDep("NNN", "version", "repo", false)
 	c.Check(buf.String(), Equals, "NNN (version) repo\n")
+
+	buf.Truncate(0)
+	verbose = true
+	PrintDep("NNN", "version", "repo", true)
+	c.Check(buf.String(), Equals, "NNN (version) repo *\n")
+
+	buf.Truncate(0)
+	verbose = false
+	PrintDep("NNN", "version", "repo", true)
+	c.Check(buf.String(), Equals, "NNN (version) *\n")
 }
