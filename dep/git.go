@@ -129,5 +129,5 @@ func (g *Git) Pull(d *Dependency) (result int) {
 func (g *Git) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" git reset --hard HEAD"))
 	util.RunCommand("git reset --hard HEAD")
-	util.RunCommand("git clean -f")
+	util.RunCommand("git clean -fd")
 }
