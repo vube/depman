@@ -72,11 +72,29 @@ func Read(filename string) (deps DependencyMap, err error) {
 	if err != nil {
 		return
 	}
+
 	err = json.Unmarshal(data, &deps.Map)
 	if err != nil {
 		return
 	}
-	deps.Path = filename
+
+// traverse map and look for empty version fields - provide a default if such found
+	for key, _ := range deps.Map {
+		val := deps.Map[key]
+		if val.Version == "" {
+			switch val.Type {
+			case TypeGit, TypeGitClone:
+				val.Version = "master"
+			case TypeHg:
+				val.Version = "tip"
+			case TypeBzr:
+				val.Version = "trunk"
+			default:
+				val.Version = ""
+			}
+			deps.Map[key] = val
+		}
+	}
 
 	for name, d := range deps.Map {
 		err := d.SetupVCS(name)
@@ -85,6 +103,8 @@ func Read(filename string) (deps DependencyMap, err error) {
 		}
 
 	}
+
+	deps.Path = filename
 
 	return
 }

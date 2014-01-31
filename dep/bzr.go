@@ -1,4 +1,4 @@
-package dep
+package bzr
 
 // Copyright 2013 Vubeology, Inc.
 
