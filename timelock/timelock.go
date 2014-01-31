@@ -13,7 +13,7 @@ import (
 
 const (
 	// the filename of the cache json
-	cacheFileName = "depman.cache"
+	cacheFileName = ".depman.cache"
 
 	// timeout in hours
 	timeoutHours = 1.0
@@ -39,7 +39,7 @@ func init() {
 }
 
 func Read() {
-	cacheFile = filepath.Join(os.TempDir(), cacheFileName)
+	cacheFile = filepath.Join(os.Getenv("GOPATH"), cacheFileName)
 
 	cache = make(map[string]time.Time)
 
