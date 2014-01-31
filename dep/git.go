@@ -1,4 +1,4 @@
-package git
+package dep
 
 // Copyright 2013 Vubeology, Inc.
 

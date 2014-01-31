@@ -78,7 +78,7 @@ func Read(filename string) (deps DependencyMap, err error) {
 		return
 	}
 
-// traverse map and look for empty version fields - provide a default if such found
+	// traverse map and look for empty version fields - provide a default if such found
 	for key, _ := range deps.Map {
 		val := deps.Map[key]
 		if val.Version == "" {

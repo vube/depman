@@ -2,13 +2,11 @@ package showfrozen
 
 // Copyright 2013 Vubeology, Inc.
 
-
 import "fmt"
 
 import "github.com/vube/depman/dep"
 import "github.com/vube/depman/util"
 import "github.com/vube/depman/colors"
-
 
 //Read - get top-level frozen dependencies
 func Read(deps dep.DependencyMap) (to_return string) {
