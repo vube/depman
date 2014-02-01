@@ -29,12 +29,12 @@ func (g *Git) LastCommit(d *Dependency, branch string) (hash string, err error) 
 		return
 	}
 
-	c := exec.Command("git", "log", "-1", "--format=%h")
+	c := exec.Command("git", "log", "-1", "--format=%H")
 	out, err := c.CombinedOutput()
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
-		util.PrintIndent(colors.Red("git log -1 --format=%h"))
+		util.PrintIndent(colors.Red("git log -1 --format=%H"))
 		util.PrintIndent(colors.Red(string(out)))
 		util.PrintIndent(colors.Red(err.Error()))
 		util.Fatal("")
