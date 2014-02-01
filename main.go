@@ -69,7 +69,7 @@ func main() {
 
 	// switch to check for deps.json
 	switch command {
-	case "init", "help":
+	case "init", "create", "help", "self-upgrade":
 		// don't check for deps.json
 	default:
 		util.CheckPath(path)
