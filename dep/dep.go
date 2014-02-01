@@ -43,9 +43,9 @@ type Dependency struct {
 }
 
 type VersionControl interface {
-	Clone(d *Dependency) (result int)
-	Pull(d *Dependency) (result int)
-	Checkout(d *Dependency) (result int)
+	Clone(d *Dependency) (err error)
+	Pull(d *Dependency) (err error)
+	Checkout(d *Dependency) (err error)
 
 	LastCommit(d *Dependency, branch string) (hash string, err error)
 	GetHead(d *Dependency) (to_return string, err error)

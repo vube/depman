@@ -29,21 +29,23 @@ func (h *Hg) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	return
 }
 
-func (h *Hg) Clone(d *Dependency) (result int) {
+func (h *Hg) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
-		result = util.RunCommand("go get -u " + d.Repo)
+		err = util.RunCommand("go get -u " + d.Repo)
 	}
 	return
 }
 
-func (h *Hg) Pull(d *Dependency) (result int) {
-	result += util.RunCommand("hg pull")
-	result += util.RunCommand("hg up")
+func (h *Hg) Pull(d *Dependency) (err error) {
+	err = util.RunCommand("hg pull")
+	if err == nil {
+		err = util.RunCommand("hg up")
+	}
 	return
 }
 
-func (h *Hg) Checkout(d *Dependency) (result int) {
-	util.RunCommand("hg up " + d.Version)
+func (h *Hg) Checkout(d *Dependency) (err error) {
+	err = util.RunCommand("hg up " + d.Version)
 	return
 }
 

@@ -13,7 +13,7 @@ import (
 )
 
 // Add interactively prompts the user for details of a dependency, adds it to deps.json, and writes out the file
-func Add(deps dep.DependencyMap, name string) (result int) {
+func Add(deps dep.DependencyMap, name string) {
 	var cont = true
 	_, exists := deps.Map[name]
 	if exists {
@@ -51,7 +51,7 @@ func Add(deps dep.DependencyMap, name string) (result int) {
 		util.Fatal(colors.Red("Error Writing " + deps.Path + ": " + err.Error()))
 	}
 
-	result = install.Install(deps)
+	install.Install(deps)
 
 	return
 }

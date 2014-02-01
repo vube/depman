@@ -7,6 +7,7 @@ package util
 import (
 	"flag"
 	"github.com/vube/depman/colors"
+	"github.com/vube/depman/result"
 	"io"
 	"log"
 	"os"
@@ -96,13 +97,13 @@ func Version(v string) {
 
 // Change directory to the specified directory, checking for errors
 // Returns the path to the old working directory
-func defaultCd(dir string) (result int) {
-	err := os.Chdir(dir)
+func defaultCd(dir string) (err error) {
+	err = os.Chdir(dir)
 
 	if err != nil {
+		result.Error()
 		logger.Output(2, indent()+colors.Red("$ cd "+dir))
 		logger.Output(2, indent()+colors.Red(err.Error()))
-		result = 1
 	} else if verbose {
 		logger.Output(2, indent()+"$ cd "+dir)
 	}
@@ -120,7 +121,7 @@ func Pwd() (pwd string) {
 }
 
 // Wrapper on os.exec to catch errors, and print useful messages
-func defaultRun(cmd string) (result int) {
+func defaultRun(cmd string) (err error) {
 
 	if verbose {
 		logger.Output(2, indent()+"$ "+cmd)
@@ -132,10 +133,10 @@ func defaultRun(cmd string) (result int) {
 	out, err := c.CombinedOutput()
 
 	if err != nil {
+		result.Error()
 		logger.Output(2, indent()+colors.Red("$ "+cmd))
-		logger.Output(2, indent()+colors.Red(string(out)))
-		logger.Output(2, indent()+colors.Red(err.Error()))
-		result += 1
+		o := strings.TrimRight(string(out), "\n")
+		logger.Output(2, indent()+colors.Red(o))
 	}
 
 	if len(out) > 0 && debug {

@@ -26,14 +26,14 @@ func init() {
 }
 
 // Install a DependencyMap
-func Install(deps dep.DependencyMap) int {
+func Install(deps dep.DependencyMap) error {
 	util.Print(colors.Blue("Installing:"))
 	set := make(map[string]string)
 	return recursiveInstall(deps, set)
 }
 
 // recursively install a DependencyMap
-func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int) {
+func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error) {
 	for name, d := range deps.Map {
 		start := time.Now()
 
@@ -46,8 +46,12 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 		util.PrintDep(name, d.Version, d.Repo, stale)
 
 		subPath := d.Path()
-		result += d.VCS.Clone(d)
-		result += util.Cd(subPath)
+		err = d.VCS.Clone(d)
+		if err != nil {
+			continue
+		}
+
+		util.Cd(subPath)
 
 		if clean {
 			d.VCS.Clean(d)
@@ -55,10 +59,16 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 
 		if stale {
 			util.VerboseIndent(" # repo is stale, pulling")
-			result += d.VCS.Pull(d)
+			err = d.VCS.Pull(d)
+			if err != nil {
+				continue
+			}
 		}
 
-		result += d.VCS.Checkout(d)
+		err = d.VCS.Checkout(d)
+		if err != nil {
+			continue
+		}
 
 		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 
@@ -70,7 +80,7 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 				util.Print(colors.Yellow("Error reading deps from '" + subDeps.Path + "': " + err.Error()))
 			} else {
 				util.IncreaseIndent()
-				result += recursiveInstall(subDeps, set)
+				recursiveInstall(subDeps, set)
 				util.DecreaseIndent()
 			}
 		}
