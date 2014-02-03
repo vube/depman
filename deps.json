@@ -11,7 +11,7 @@
     },
     "gocov-html": {
         "repo": "https://github.com/matm/gocov-html.git",
-        "version": "fXXX83448b",
+        "version": "f83448b",
         "type": "git-clone",
         "alias": "github.com/matm/gocov-html"
     },
