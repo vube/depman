@@ -15,7 +15,7 @@ type Git struct{}
 // Checkout uses the appropriate VCS to checkout the specified version of the code
 func (g *Git) Checkout(d *Dependency) (err error) {
 	err = util.RunCommand("git checkout " + d.Version)
-	if err == nil {
+	if err != nil {
 		err = g.Fetch(d)
 		if err == nil {
 			err = util.RunCommand("git checkout " + d.Version)
