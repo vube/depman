@@ -44,7 +44,13 @@ type Dependency struct {
 
 type VersionControl interface {
 	Clone(d *Dependency) (result int)
-	Pull(d *Dependency) (result int)
+
+	// Get changes from the server
+	Fetch(d *Dependency) (result int)
+
+	// Pull/Merge/Update this branch
+	Update(d *Dependency) (result int)
+
 	Checkout(d *Dependency) (result int)
 
 	LastCommit(d *Dependency, branch string) (hash string, err error)

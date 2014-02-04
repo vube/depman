@@ -62,7 +62,12 @@ func (b *Bzr) Clone(d *Dependency) (result int) {
 	return
 }
 
-func (b *Bzr) Pull(d *Dependency) (result int) {
+func (b *Bzr) Update(d *Dependency) (result int) {
+	result = util.RunCommand("bzr pull")
+	return
+}
+
+func (b *Bzr) Fetch(d *Dependency) (result int) {
 	result = util.RunCommand("bzr pull")
 	return
 }

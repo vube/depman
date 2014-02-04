@@ -55,10 +55,14 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (result int
 
 		if stale {
 			util.VerboseIndent(" # repo is stale, pulling")
-			result += d.VCS.Pull(d)
+			result += d.VCS.Fetch(d)
 		}
 
 		result += d.VCS.Checkout(d)
+
+		if stale {
+			result += d.VCS.Update(d)
+		}
 
 		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))
 

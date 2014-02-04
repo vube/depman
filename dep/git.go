@@ -15,7 +15,7 @@ type Git struct{}
 // Checkout uses the appropriate VCS to checkout the specified version of the code
 func (g *Git) Checkout(d *Dependency) (result int) {
 	if util.RunCommand("git checkout "+d.Version) != 0 {
-		g.Pull(d)
+		g.Fetch(d)
 		result = util.RunCommand("git checkout " + d.Version)
 	}
 	return
@@ -117,12 +117,15 @@ func (g *Git) Clone(d *Dependency) (result int) {
 	return
 }
 
-func (g *Git) Pull(d *Dependency) (result int) {
+func (g *Git) Update(d *Dependency) (result int) {
 	if g.isBranch(d.Version) {
 		util.RunCommand("git pull origin " + d.Version)
-	} else {
-		util.RunCommand("git fetch origin")
 	}
+	return
+}
+
+func (g *Git) Fetch(d *Dependency) (result int) {
+	result = util.RunCommand("git fetch origin")
 	return
 }
 
