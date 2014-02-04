@@ -122,7 +122,7 @@ func (g *Git) Clone(d *Dependency) (err error) {
 
 func (g *Git) Update(d *Dependency) (err error) {
 	if g.isBranch(d.Version) {
-		err = util.RunCommand("git pull origin " + d.Version)
+		err = util.RunCommand("git pull")
 	}
 	return
 }

@@ -63,7 +63,6 @@ func (b *Bzr) Clone(d *Dependency) (err error) {
 }
 
 func (b *Bzr) Update(d *Dependency) (err error) {
-	err = util.RunCommand("bzr pull")
 	return
 }
 

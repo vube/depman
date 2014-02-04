@@ -42,7 +42,7 @@ func (h *Hg) Fetch(d *Dependency) (err error) {
 }
 
 func (h *Hg) Update(d *Dependency) (err error) {
-	 err = util.RunCommand("hg up")
+	err = util.RunCommand("hg up" + d.Version)
 	return
 }
 
