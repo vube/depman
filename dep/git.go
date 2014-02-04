@@ -16,7 +16,7 @@ type Git struct{}
 func (g *Git) Checkout(d *Dependency) (err error) {
 	err = util.RunCommand("git checkout " + d.Version)
 	if err == nil {
-		err = g.Pull(d)
+		err = g.Fetch(d)
 		if err == nil {
 			err = util.RunCommand("git checkout " + d.Version)
 		}
@@ -32,12 +32,12 @@ func (g *Git) LastCommit(d *Dependency, branch string) (hash string, err error) 
 		return
 	}
 
-	c := exec.Command("git", "log", "-1", "--format=%h")
+	c := exec.Command("git", "log", "-1", "--format=%H")
 	out, err := c.CombinedOutput()
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
-		util.PrintIndent(colors.Red("git log -1 --format=%h"))
+		util.PrintIndent(colors.Red("git log -1 --format=%H"))
 		util.PrintIndent(colors.Red(string(out)))
 		util.PrintIndent(colors.Red(err.Error()))
 		util.Fatal("")
@@ -120,12 +120,15 @@ func (g *Git) Clone(d *Dependency) (err error) {
 	return
 }
 
-func (g *Git) Pull(d *Dependency) (err error) {
+func (g *Git) Update(d *Dependency) (err error) {
 	if g.isBranch(d.Version) {
 		err = util.RunCommand("git pull origin " + d.Version)
-	} else {
-		err = util.RunCommand("git fetch origin")
 	}
+	return
+}
+
+func (g *Git) Fetch(d *Dependency) (err error) {
+	err = util.RunCommand("git fetch origin")
 	return
 }
 

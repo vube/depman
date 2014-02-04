@@ -62,12 +62,19 @@ func (b *Bzr) Clone(d *Dependency) (err error) {
 	return
 }
 
-func (b *Bzr) Pull(d *Dependency) (err error) {
-	return util.RunCommand("bzr pull")
+func (b *Bzr) Update(d *Dependency) (err error) {
+	err = util.RunCommand("bzr pull")
+	return
+}
+
+func (b *Bzr) Fetch(d *Dependency) (err error) {
+	err = util.RunCommand("bzr pull")
+	return
 }
 
 func (b *Bzr) Checkout(d *Dependency) (err error) {
-	return util.RunCommand("bzr up --revision " + d.Version)
+	err = util.RunCommand("bzr up --revision " + d.Version)
+	return
 }
 
 func (b *Bzr) Clean(d *Dependency) {

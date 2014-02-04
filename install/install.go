@@ -58,8 +58,8 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error)
 		}
 
 		if stale {
-			util.VerboseIndent(" # repo is stale, pulling")
-			err = d.VCS.Pull(d)
+			util.VerboseIndent(" # repo is stale, fetching")
+			err = d.VCS.Fetch(d)
 			if err != nil {
 				continue
 			}
@@ -68,6 +68,13 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error)
 		err = d.VCS.Checkout(d)
 		if err != nil {
 			continue
+		}
+
+		if stale {
+			err = d.VCS.Update(d)
+			if err != nil {
+				continue
+			}
 		}
 
 		util.VerboseIndent(fmt.Sprintf("# time to install: %.3fs", time.Since(start).Seconds()))

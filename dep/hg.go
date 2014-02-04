@@ -36,11 +36,13 @@ func (h *Hg) Clone(d *Dependency) (err error) {
 	return
 }
 
-func (h *Hg) Pull(d *Dependency) (err error) {
+func (h *Hg) Fetch(d *Dependency) (err error) {
 	err = util.RunCommand("hg pull")
-	if err == nil {
-		err = util.RunCommand("hg up")
-	}
+	return
+}
+
+func (h *Hg) Update(d *Dependency) (err error) {
+	 err = util.RunCommand("hg up")
 	return
 }
 

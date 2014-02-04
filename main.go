@@ -32,7 +32,7 @@ import (
 )
 
 // Version number
-const VERSION string = "2.6.0"
+const VERSION string = "2.6.1"
 
 //===============================================
 
@@ -70,9 +70,8 @@ func main() {
 
 	// switch to check for deps.json
 	switch command {
-	case "init", "help":
-		// don't check for deps.json
-	default:
+	case "add", "", "install", "update", "show-frozen":
+		// check for deps.json
 		util.CheckPath(path)
 		deps, err = dep.Read(path)
 		if err != nil {
