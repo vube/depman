@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
+	"github.com/vube/depman/result"
 	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/util"
 	"time"
@@ -84,7 +85,8 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error)
 		if depsFile != "" && Recurse {
 			subDeps, err := dep.Read(depsFile)
 			if err != nil {
-				util.Print(colors.Yellow("Error reading deps from '" + subDeps.Path + "': " + err.Error()))
+				util.Print(colors.Red("Error reading deps from '" + depsFile + "': " + err.Error()))
+				result.RegisterError()
 			} else {
 				util.IncreaseIndent()
 				recursiveInstall(subDeps, set)
