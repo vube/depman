@@ -55,25 +55,24 @@ func (b *Bzr) GetHead(d *Dependency) (hash string, err error) {
 	return
 }
 
-func (b *Bzr) Clone(d *Dependency) (result int) {
+func (b *Bzr) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
-		result = util.RunCommand("go get -u " + d.Repo)
+		err = util.RunCommand("go get -u " + d.Repo)
 	}
 	return
 }
 
-func (b *Bzr) Update(d *Dependency) (result int) {
-	result = util.RunCommand("bzr pull")
+func (b *Bzr) Update(d *Dependency) (err error) {
 	return
 }
 
-func (b *Bzr) Fetch(d *Dependency) (result int) {
-	result = util.RunCommand("bzr pull")
+func (b *Bzr) Fetch(d *Dependency) (err error) {
+	err = util.RunCommand("bzr pull")
 	return
 }
 
-func (b *Bzr) Checkout(d *Dependency) (result int) {
-	util.RunCommand("bzr up --revision " + d.Version)
+func (b *Bzr) Checkout(d *Dependency) (err error) {
+	err = util.RunCommand("bzr up --revision " + d.Version)
 	return
 }
 

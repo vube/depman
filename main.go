@@ -20,22 +20,23 @@ import (
 	"github.com/vube/depman/create"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/install"
+	"github.com/vube/depman/result"
 	"github.com/vube/depman/showfrozen"
 	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/update"
 	"github.com/vube/depman/upgrade"
 	"github.com/vube/depman/util"
 	"log"
+	"os"
 	"strings"
 )
 
 // Version number
-const VERSION string = "2.6.1"
+const VERSION string = "2.6.2"
 
 //===============================================
 
 func main() {
-	var result int
 	var help bool
 	var path string
 	var command string
@@ -81,7 +82,7 @@ func main() {
 	// switch to exec the sub command
 	switch command {
 	case "init", "create":
-		result = create.Create(path)
+		create.Create(path)
 	case "add":
 		if len(arguments) < 1 {
 			util.Print(colors.Red("Add command requires 1 argument: Add [nickname]"))
@@ -98,7 +99,7 @@ func main() {
 			update.Update(deps, arguments[0], arguments[1])
 		}
 	case "install", "":
-		result = install.Install(deps)
+		install.Install(deps)
 	case "self-upgrade":
 		upgrade.Self()
 	case "show-frozen":
@@ -113,20 +114,20 @@ func main() {
 			fmt.Print(showfrozen.Read(deps))
 		}
 	default:
-		result = 1
+		result.RegisterError()
 		log.Println(colors.Red("Unknown Command: " + command))
 		fallthrough
 	case "help":
 		Help()
 	}
 
-	if result == 0 {
-		util.Print("Success")
-	}
-
 	timelock.Write()
 
-	util.OsExit(result)
+	if result.ShouldExitWithError() {
+		os.Exit(1)
+	} else {
+		util.Print("Success")
+	}
 }
 
 //===============================================

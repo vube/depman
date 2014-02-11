@@ -13,10 +13,13 @@ import (
 type Git struct{}
 
 // Checkout uses the appropriate VCS to checkout the specified version of the code
-func (g *Git) Checkout(d *Dependency) (result int) {
-	if util.RunCommand("git checkout "+d.Version) != 0 {
-		g.Fetch(d)
-		result = util.RunCommand("git checkout " + d.Version)
+func (g *Git) Checkout(d *Dependency) (err error) {
+	err = util.RunCommand("git checkout " + d.Version)
+	if err != nil {
+		err = g.Fetch(d)
+		if err == nil {
+			err = util.RunCommand("git checkout " + d.Version)
+		}
 	}
 	return
 }
@@ -106,26 +109,26 @@ func (g *Git) isBranch(name string) (result bool) {
 }
 
 // CloneFetch will clone d.Repo into d.Path() if d.Path does not exist, otherwise it will cd to d.Path() and run git fetch
-func (g *Git) Clone(d *Dependency) (result int) {
+func (g *Git) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
 		if d.Type == TypeGitClone {
-			result = util.RunCommand("git clone " + d.Repo + " " + d.Path())
+			err = util.RunCommand("git clone " + d.Repo + " " + d.Path())
 		} else {
-			result = util.RunCommand("go get -u " + d.Repo)
+			err = util.RunCommand("go get -u " + d.Repo)
 		}
 	}
 	return
 }
 
-func (g *Git) Update(d *Dependency) (result int) {
+func (g *Git) Update(d *Dependency) (err error) {
 	if g.isBranch(d.Version) {
-		util.RunCommand("git pull origin " + d.Version)
+		err = util.RunCommand("git pull")
 	}
 	return
 }
 
-func (g *Git) Fetch(d *Dependency) (result int) {
-	result = util.RunCommand("git fetch origin")
+func (g *Git) Fetch(d *Dependency) (err error) {
+	err = util.RunCommand("git fetch origin")
 	return
 }
 
@@ -133,4 +136,5 @@ func (g *Git) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" git reset --hard HEAD"))
 	util.RunCommand("git reset --hard HEAD")
 	util.RunCommand("git clean -fd")
+	return
 }

@@ -15,9 +15,8 @@ import (
 const template = "{}\n"
 
 // Create writes an empty deps.json at the location specified by path
-func Create(path string) (result int) {
+func Create(path string) {
 	if util.Exists(path) {
-		result = 1
 		util.Fatal(colors.Red(dep.DepsFile + " already exists!"))
 	}
 	util.Print(colors.Blue("Initializing:"))

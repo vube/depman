@@ -99,15 +99,14 @@ func (s *TestSuite) TestCdPwd(c *C) {
 	Mock(buf)
 	verbose = true
 
-	r := Cd("/")
-
+	err := Cd("/")
 	c.Check(buf.String(), Equals, "$ cd /\n")
+	c.Check(err, IsNil)
 
 	buf.Truncate(0)
-	c.Check(r, Equals, 0)
-	r = Cd("/none")
+	err = Cd("/none")
 	c.Check(buf.String(), Equals, "$ cd /none\nchdir /none: no such file or directory\n")
-	c.Check(r, Equals, 1)
+	c.Check(err, ErrorMatches, `chdir /none: no such file or directory`)
 }
 
 func (s *TestSuite) TestPwdErr(c *C) {
@@ -150,21 +149,23 @@ func (s *TestSuite) TestDefaultRun(c *C) {
 	Mock(buf)
 
 	verbose = true
-	defaultRun("echo NNN")
+	err = defaultRun("echo NNN")
+	c.Check(err, IsNil)
 	c.Check(buf.String(), Equals, "$ echo NNN\n")
 
 	buf.Truncate(0)
 	verbose = false
 	debug = true
-	defaultRun("echo NNN")
+	err = defaultRun("echo NNN")
+	c.Check(err, IsNil)
 	c.Check(buf.String(), Equals, "NNN\n")
 
 	buf.Truncate(0)
 	verbose = false
 	debug = true
-	r := defaultRun("none")
-	c.Check(buf.String(), Equals, "$ none\nexec: \"none\": executable file not found in $PATH\n")
-	c.Check(r, Equals, 1)
+	err = defaultRun("none")
+	c.Check(buf.String(), Equals, "$ none\n")
+	c.Check(err, ErrorMatches, `exec: "none": executable file not found in \$PATH`)
 }
 
 func (s *TestSuite) TestUpwardFind(c *C) {
