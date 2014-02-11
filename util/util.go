@@ -101,7 +101,7 @@ func defaultCd(dir string) (err error) {
 	err = os.Chdir(dir)
 
 	if err != nil {
-		result.Error()
+		result.RegisterError()
 		logger.Output(2, indent()+colors.Red("$ cd "+dir))
 		logger.Output(2, indent()+colors.Red(err.Error()))
 	} else if verbose {
@@ -133,7 +133,7 @@ func defaultRun(cmd string) (err error) {
 	out, err := c.CombinedOutput()
 
 	if err != nil {
-		result.Error()
+		result.RegisterError()
 		logger.Output(2, indent()+colors.Red("$ "+cmd))
 		o := strings.TrimRight(string(out), "\n")
 		logger.Output(2, indent()+colors.Red(o))

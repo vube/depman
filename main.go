@@ -114,7 +114,7 @@ func main() {
 			fmt.Print(showfrozen.Read(deps))
 		}
 	default:
-		result.Error()
+		result.RegisterError()
 		log.Println(colors.Red("Unknown Command: " + command))
 		fallthrough
 	case "help":
@@ -123,7 +123,7 @@ func main() {
 
 	timelock.Write()
 
-	if result.ExitWithError() {
+	if result.ShouldExitWithError() {
 		os.Exit(1)
 	} else {
 		util.Print("Success")

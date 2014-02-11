@@ -2,10 +2,10 @@ package result
 
 var err bool
 
-func Error() {
+func RegisterError() {
 	err = true
 }
 
-func ExitWithError() bool {
+func ShouldExitWithError() bool {
 	return err
 }
