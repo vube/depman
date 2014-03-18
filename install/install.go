@@ -43,7 +43,7 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error)
 			continue
 		}
 
-		stale := timelock.IsStale(d.Repo)
+		stale := timelock.IsStale(d)
 
 		util.PrintDep(name, d.Version, d.Repo, stale)
 
