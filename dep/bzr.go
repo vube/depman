@@ -3,10 +3,11 @@ package dep
 // Copyright 2013 Vubeology, Inc.
 
 import (
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
 	"os/exec"
 	"strings"
+
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 )
 
 type Bzr struct{}

@@ -4,10 +4,11 @@ package dep
 
 import (
 	"errors"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
 	"os/exec"
 	"strings"
+
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 )
 
 type Git struct{}

@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
-	"github.com/vube/depman/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/vube/depman/util"
 )
 
 const (

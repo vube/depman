@@ -3,8 +3,8 @@ package colors
 // Copyright 2013 Vubeology, Inc.
 
 import (
-	. "launchpad.net/gocheck"
 	"testing"
+	. "launchpad.net/gocheck"
 )
 
 // Hook up gocheck into the "go test" runner.

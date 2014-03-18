@@ -4,11 +4,12 @@ package dep
 
 import (
 	"bytes"
+	"log"
+	"os"
+
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/util"
 	. "launchpad.net/gocheck"
-	"log"
-	"os"
 )
 
 type GitSuite struct {

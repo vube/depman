@@ -8,13 +8,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/util"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/util"
 )
 
 // Dependency Types

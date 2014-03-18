@@ -6,13 +6,14 @@ package util
 
 import (
 	"flag"
-	"github.com/vube/depman/colors"
-	"github.com/vube/depman/result"
 	"io"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/vube/depman/colors"
+	"github.com/vube/depman/result"
 )
 
 // GLOBALS

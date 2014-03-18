@@ -15,6 +15,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"strings"
+
 	"github.com/vube/depman/add"
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/create"
@@ -26,9 +30,6 @@ import (
 	"github.com/vube/depman/update"
 	"github.com/vube/depman/upgrade"
 	"github.com/vube/depman/util"
-	"log"
-	"os"
-	"strings"
 )
 
 // Version number
