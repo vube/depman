@@ -36,11 +36,12 @@ const DepsFile string = "deps.json"
 
 // Dependency defines a single dependency
 type Dependency struct {
-	Repo    string         `json:"repo"`
-	Version string         `json:"version"`
-	Type    string         `json:"type"`
-	Alias   string         `json:"alias,omitempty"`
-	VCS     VersionControl `json:"-"`
+	Repo      string         `json:"repo"`
+	Version   string         `json:"version"`
+	Type      string         `json:"type"`
+	Alias     string         `json:"alias,omitempty"`
+	SkipCache bool           `json:"skip-cache,omitempty"`
+	VCS       VersionControl `json:"-"`
 }
 
 type VersionControl interface {

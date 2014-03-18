@@ -7,7 +7,8 @@
     "gocov": {
         "repo": "github.com/vube/gocov/gocov",
         "version": "90c9390",
-        "type": "git"
+        "type": "git",
+        "skip-cache": true
     },
     "gocov-html": {
         "repo": "https://github.com/matm/gocov-html.git",

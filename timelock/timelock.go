@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
 )
 
@@ -90,24 +91,24 @@ func Write() {
 	return
 }
 
-func IsStale(repo string) (stale bool) {
+func IsStale(d *dep.Dependency) (stale bool) {
 
-	if skip {
+	if skip || d.SkipCache {
 		return true
 	}
 
-	ts, ok := cache[repo]
+	ts, ok := cache[d.Repo]
 
 	// item is in the cache
 	if ok {
 		// item is old
 		if time.Since(ts).Hours() > timeoutHours {
 			stale = true
-			cache[repo] = time.Now()
+			cache[d.Repo] = time.Now()
 		}
 	} else {
 		stale = true
-		cache[repo] = time.Now()
+		cache[d.Repo] = time.Now()
 	}
 
 	return

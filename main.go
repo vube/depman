@@ -33,7 +33,7 @@ import (
 )
 
 // Version number
-const VERSION string = "2.6.3"
+const VERSION string = "2.7.0"
 
 //===============================================
 
