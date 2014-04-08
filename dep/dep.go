@@ -153,6 +153,11 @@ func (d *Dependency) SetupVCS(name string) (err error) {
 		err = ErrUnknownType
 	}
 
+	if d.Type != TypeGitClone && d.Alias != "" {
+		util.Print(colors.Yellow("Warning: " + d.Repo + ": 'alias' field only allowed in dependencies with type 'git-clone', skipping..."))
+		d.Alias = ""
+	}
+
 	return
 }
 
