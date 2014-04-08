@@ -260,3 +260,10 @@ func PrintDep(name string, version string, repo string, stale bool) {
 		}
 	}
 }
+
+func GoPathIsSet() {
+	goPath := os.Getenv("GOPATH")
+	if strings.TrimSpace(goPath) == "" {
+		log.Fatal(colors.Red("You must set GOPATH"))
+	}
+}

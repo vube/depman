@@ -53,6 +53,8 @@ func main() {
 
 	util.Version(VERSION)
 
+	util.GoPathIsSet()
+
 	timelock.Read()
 
 	path = dep.GetPath(path)
