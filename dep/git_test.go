@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/util"
@@ -29,7 +31,20 @@ func (s *GitSuite) SetUpTest(c *C) {
 func (s *GitSuite) TestIsGitBranch(c *C) {
 	g := new(Git)
 
-	util.Cd(os.Getenv("GOPATH") + "/src/github.com/vube/depman")
+	parts := strings.Split(os.Getenv("GOPATH"), ":")
+
+	var path string
+
+	for _, v := range parts {
+		p := filepath.Join(v, "src", "github.com", "vube", "depman")
+		if util.Exists(p) {
+			path = p
+		}
+	}
+
+	c.Assert(path, Not(Equals), "")
+
+	util.Cd(path)
 	c.Check(g.isBranch("master"), Equals, true)
 
 	c.Check(g.isBranch("2.1.0"), Equals, false)

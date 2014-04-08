@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/vube/depman/dep"
@@ -41,7 +42,8 @@ func init() {
 }
 
 func Read() {
-	cacheFile = filepath.Join(os.Getenv("GOPATH"), cacheFileName)
+	parts := strings.Split(os.Getenv("GOPATH"), ":")
+	cacheFile = filepath.Join(parts[0], cacheFileName)
 
 	cache = make(map[string]time.Time)
 
