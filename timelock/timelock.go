@@ -41,6 +41,29 @@ func init() {
 	flag.BoolVar(&skip, "skip-cache", false, "Skip the time based cache for this run only")
 }
 
+func Clear() (cleared bool) {
+	cleared = clear
+
+	if clear {
+		parts := strings.Split(os.Getenv("GOPATH"), ":")
+		cacheFile = filepath.Join(parts[0], cacheFileName)
+
+		util.Print("Clearing cache file: " + cacheFile)
+
+		_, err := os.Stat(cacheFile)
+		if err != nil {
+			return
+		}
+
+		err = os.Remove(cacheFile)
+		if err != nil {
+			util.Fatal(err)
+		}
+	}
+
+	return
+}
+
 func Read() {
 	parts := strings.Split(os.Getenv("GOPATH"), ":")
 	cacheFile = filepath.Join(parts[0], cacheFileName)
@@ -48,14 +71,6 @@ func Read() {
 	cache = make(map[string]time.Time)
 
 	if !util.Exists(cacheFile) {
-		return
-	}
-
-	if clear {
-		err := os.Remove(cacheFile)
-		if err != nil {
-			util.Fatal(err)
-		}
 		return
 	}
 
