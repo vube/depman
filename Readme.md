@@ -3,7 +3,7 @@ Depman
 
 Dependency management helper for Golang packages. Supports versioned dependencies, using standard Golang imports.
 
-Copyright 2014 Vubeology, Inc.
+Copyright 2013-2014 Vubeology, Inc.
 
 Released under the MIT License (see LICENSE).
 
