@@ -60,7 +60,7 @@ func recursiveInstall(deps dep.DependencyMap, set map[string]string) (err error)
 		}
 
 		if stale {
-			util.VerboseIndent(" # repo is stale, fetching")
+			util.VerboseIndent("# repo is stale, fetching")
 			err = d.VCS.Fetch(d)
 			if err != nil {
 				continue

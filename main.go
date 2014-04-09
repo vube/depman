@@ -33,7 +33,7 @@ import (
 )
 
 // Version number
-const VERSION string = "2.7.0"
+const VERSION string = "2.8.2"
 
 //===============================================
 
@@ -52,6 +52,12 @@ func main() {
 	util.Parse()
 
 	util.Version(VERSION)
+
+	util.GoPathIsSet()
+
+	if timelock.Clear() {
+		return
+	}
 
 	timelock.Read()
 

@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -154,18 +153,35 @@ func (d *Dependency) SetupVCS(name string) (err error) {
 		err = ErrUnknownType
 	}
 
+	if d.Type != TypeGitClone && d.Alias != "" {
+		util.Print(colors.Yellow("Warning: " + d.Repo + ": 'alias' field only allowed in dependencies with type 'git-clone', skipping..."))
+		d.Alias = ""
+	}
+
 	return
 }
 
-// Path returns the path to the deps.json file that this DependencyMap was read from
+// Path returns the path for this dependency
+// searches for the appropriate directory in each part of the GOPATH (delimited by ':')
+// if not found return the path using the first port of GOPATH
 func (d *Dependency) Path() (p string) {
-	goPath := os.Getenv("GOPATH")
-	if strings.TrimSpace(goPath) == "" {
-		log.Fatal(colors.Red("You must set GOPATH"))
+	parts := strings.Split(os.Getenv("GOPATH"), ":")
+
+	for _, path := range parts {
+		p = filepath.Join(path, "src")
+		if d.Alias == "" {
+			p = filepath.Join(p, d.Repo)
+		} else {
+			p = filepath.Join(p, d.Alias)
+		}
+
+		if util.Exists(p) {
+			return
+		}
 	}
 
-	p = filepath.Join(goPath, "src")
-
+	// didn't find a directory, use the first part of gopath
+	p = filepath.Join(parts[0], "src")
 	if d.Alias == "" {
 		p = filepath.Join(p, d.Repo)
 	} else {
