@@ -1,11 +1,3 @@
-// Dependency Manager for Golang Projects
-// Author: Nicholas Capo <nicholas@vubeology.com>
-//
-//
-// Installation: `go get github.com/vube/depman`
-//
-// For help run 'depman help'
-//
 package main
 
 // Copyright 2013-2014 Vubeology, Inc.

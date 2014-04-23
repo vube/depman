@@ -1,24 +1,29 @@
 {
-    "gocheck": {
-        "repo": "launchpad.net/gocheck",
-        "version": "85",
-        "type": "bzr"
-    },
-    "gocov": {
-        "repo": "github.com/vube/gocov/gocov",
-        "version": "90c9390",
-        "type": "git",
-        "skip-cache": true
-    },
-    "gocov-html": {
-        "repo": "https://github.com/matm/gocov-html.git",
-        "version": "f83448b",
-        "type": "git-clone",
-        "alias": "github.com/matm/gocov-html"
-    },
-    "golint": {
-        "repo": "github.com/golang/lint/golint",
-        "version": "22f4d5e",
-        "type": "git"
-    }
+	"gocheck": {
+		"repo": "launchpad.net/gocheck",
+		"version": "87",
+		"type": "bzr"
+	},
+	"gocov": {
+		"repo": "github.com/vube/gocov/gocov",
+		"version": "93371a7ae85bec1c4afe9b9f3281c062ab106e6d",
+		"type": "git",
+		"skip-cache": true
+	},
+	"gocov-html": {
+		"repo": "https://github.com/matm/gocov-html.git",
+		"version": "1512341d22ab06788fc5ad63925fd07979a9ef39",
+		"type": "git-clone",
+		"alias": "github.com/matm/gocov-html"
+	},
+	"godocdown": {
+		"repo": "github.com/robertkrimen/godocdown",
+		"version": "0bfa0490548148882a54c15fbc52a621a9f50cbe",
+		"type": "git"
+	},
+	"golint": {
+		"repo": "github.com/golang/lint/golint",
+		"version": "7e9cdc93310598b5c6cd9ce4d0d0a37c0f5b9e4c",
+		"type": "git"
+	}
 }
