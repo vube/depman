@@ -1,7 +1,7 @@
 // Package update provides functions to update a dependency to the latest version
 package update
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"github.com/vube/depman/colors"

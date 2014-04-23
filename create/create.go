@@ -1,7 +1,7 @@
 // Package create provides functions to initialize a new deps.json
 package create
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"io/ioutil"

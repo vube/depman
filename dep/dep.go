@@ -2,7 +2,7 @@
 // and functions to read and write a DependencyMap to a deps.json file
 package dep
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"bytes"
