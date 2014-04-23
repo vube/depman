@@ -3,10 +3,11 @@ package timelock
 // Copyright 2013-2014 Vubeology, Inc.
 
 import (
-	"github.com/vube/depman/dep"
-	. "launchpad.net/gocheck"
 	"testing"
 	"time"
+
+	"github.com/vube/depman/dep"
+	. "launchpad.net/gocheck"
 )
 
 // Hook up gocheck into the "go test" runner.
