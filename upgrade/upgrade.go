@@ -3,7 +3,7 @@
 // Self() provides a way to upgrade depman using depman
 package upgrade
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"encoding/json"
@@ -12,7 +12,6 @@ import (
 	"io/ioutil"
 	"net"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -165,26 +164,7 @@ func (v *version) parse(ver string) (err error) {
 	if len(parts) != 3 {
 		return fmt.Errorf("Versions must be three ints separated by '.'")
 	}
-
-	var x int64
-
-	x, err = strconv.ParseInt(parts[0], 10, 64)
-	if err != nil {
-		return
-	}
-	v.a = int(x)
-
-	x, err = strconv.ParseInt(parts[1], 10, 64)
-	if err != nil {
-		return
-	}
-	v.b = int(x)
-
-	x, err = strconv.ParseInt(parts[2], 10, 64)
-	if err != nil {
-		return
-	}
-	v.c = int(x)
+	_, err = fmt.Sscanf(ver, "%d.%d.%d", &v.a, &v.b, &v.c)
 
 	return
 }
@@ -223,11 +203,9 @@ func getVersions() (vers []*version, err error) {
 	return
 }
 
-// getter abstracts fetching from github, for testing
-var getter = fromGitHub
-
-// fromGithub fetches version data from the gihub api, using a 500 millisecond timout
-func fromGitHub(url string) (data []byte, err error) {
+// getter abstracts fetching from github, to make testing easier
+// this implementation fetches version data from the gihub api, using a 500 millisecond timout
+var getter = func(url string) (data []byte, err error) {
 	var timeout = time.Duration(500 * time.Millisecond)
 
 	var transport = http.Transport{
