@@ -261,6 +261,7 @@ func PrintDep(name string, version string, repo string, stale bool) {
 	}
 }
 
+// GoPathIsSet causes the program to exit(1) if $GOPATH is not set
 func GoPathIsSet() {
 	goPath := os.Getenv("GOPATH")
 	if strings.TrimSpace(goPath) == "" {

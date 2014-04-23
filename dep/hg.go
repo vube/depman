@@ -10,6 +10,7 @@ import (
 	"github.com/vube/depman/util"
 )
 
+// Hg implements the VersionControl interface by using Mercurial
 type Hg struct{}
 
 // LastCommit retrieves the version number of the last commit on branch
@@ -30,6 +31,7 @@ func (h *Hg) LastCommit(d *Dependency, branch string) (hash string, err error) {
 	return
 }
 
+// Clone uses go get to clone a mercurial repo
 func (h *Hg) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
 		err = util.RunCommand("go get -u " + d.Repo)
@@ -37,21 +39,25 @@ func (h *Hg) Clone(d *Dependency) (err error) {
 	return
 }
 
+// Fetch fetches a mercurial repo
 func (h *Hg) Fetch(d *Dependency) (err error) {
 	err = util.RunCommand("hg pull")
 	return
 }
 
+// Update updates a mercurial repo
 func (h *Hg) Update(d *Dependency) (err error) {
 	err = util.RunCommand("hg up " + d.Version)
 	return
 }
 
+// Checkout updates a mercurial repo
 func (h *Hg) Checkout(d *Dependency) (err error) {
 	err = util.RunCommand("hg up " + d.Version)
 	return
 }
 
+//Clean cleans a mercurial repo
 func (h *Hg) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" hg up --clean "+d.Version))
 	util.RunCommand("hg up --clean " + d.Version)
@@ -64,14 +70,10 @@ func (h *Hg) GetHead(d *Dependency) (hash string, err error) {
 
 	pwd = util.Pwd()
 	util.Cd(d.Path())
+	defer util.Cd(pwd)
 
-	{
-		var out_bytes []byte
-		out_bytes, err = exec.Command("hg", "id", "-i", d.Version).CombinedOutput()
-		hash = strings.TrimSuffix(string(out_bytes), "\n")
-	}
-
-	util.Cd(pwd)
+	out, err := exec.Command("hg", "id", "-i", d.Version).CombinedOutput()
+	hash = strings.TrimSuffix(string(out), "\n")
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
