@@ -95,11 +95,17 @@ Cache
 
 Depman uses a time based cache to speed up normal operations.
 
-A global list of dependencies and timestamps is kept at `$GOPATH/.depman.cache`. When depman is run is looks at the timestamp to decide weather to update the repo (`go get -u`, `git clone`, `git fetch`, etc). If the dependency is more that 1 hour old, depman will fetch updates from the network, otherwise depman uses the repo as is. If the cache was stale or unused, a '*' will be printed at the end of the installation line.
+A global list of dependencies and timestamps is kept at `$GOPATH/.depman.cache`. When depman is run it looks at the timestamp to decide weather to update the repo (`go get -u`, `git clone`, `git fetch`, etc). If the dependency is more that 1 hour old, depman will fetch updates from the network, otherwise depman uses the repo as is. If the cache was stale or unused, a '*' will be printed at the end of the installation line.
 
 You can clear the cache by deleting the cache file, or running depman with the `--clear-cache` flag. Additional information about the cache (including the time spent while installing) can been seen by running depman with the `--verbose` flag.
 
 The source code for the feature is in `$GOPATH/src/github.com/vube/depman/timecache`
+
+Upgrade Checks
+---------------------
+Depman will preform an upgrade check of itself, approximatly once every hour. The check is designed to be non-intrusive, and not slow down any normal operations. If a newer version is detected depman will print a helpful message with the new version number and instructions on how to upgrade.
+
+The frequency of checks is controlled by the same cache as described above. Additionally any errors encounters during the check can be viewed by running depman with the `--verbose` flag.
 
 Implementation Requirements
 -----------------------------------------
