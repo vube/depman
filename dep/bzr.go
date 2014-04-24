@@ -1,6 +1,6 @@
 package dep
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"os/exec"
@@ -10,6 +10,7 @@ import (
 	"github.com/vube/depman/util"
 )
 
+// Bzr implements the VersionControl interface by using Bazaar
 type Bzr struct{}
 
 // LastCommit retrieves the version number of the last commit on branch
@@ -36,14 +37,10 @@ func (b *Bzr) GetHead(d *Dependency) (hash string, err error) {
 
 	pwd = util.Pwd()
 	util.Cd(d.Path())
+	defer util.Cd(pwd)
 
-	{
-		var out_bytes []byte
-		out_bytes, err = exec.Command("bzr", "revno", d.Version).CombinedOutput()
-		hash = strings.TrimSuffix(string(out_bytes), "\n")
-	}
-
-	util.Cd(pwd)
+	out, err := exec.Command("bzr", "revno", d.Version).CombinedOutput()
+	hash = strings.TrimSuffix(string(out), "\n")
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
@@ -56,6 +53,7 @@ func (b *Bzr) GetHead(d *Dependency) (hash string, err error) {
 	return
 }
 
+// Clone clones a bzr repo
 func (b *Bzr) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
 		err = util.RunCommand("go get -u " + d.Repo)
@@ -63,20 +61,24 @@ func (b *Bzr) Clone(d *Dependency) (err error) {
 	return
 }
 
+// Update is a no-op for now
 func (b *Bzr) Update(d *Dependency) (err error) {
 	return
 }
 
+// Fetch pulls in a bzr repo
 func (b *Bzr) Fetch(d *Dependency) (err error) {
 	err = util.RunCommand("bzr pull")
 	return
 }
 
+// Checkout updates a bzr repo
 func (b *Bzr) Checkout(d *Dependency) (err error) {
 	err = util.RunCommand("bzr up --revision " + d.Version)
 	return
 }
 
+// Clean is a no-op for now
 func (b *Bzr) Clean(d *Dependency) {
 	return
 }

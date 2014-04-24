@@ -2,7 +2,7 @@
 // and functions to read and write a DependencyMap to a deps.json file
 package dep
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"bytes"
@@ -26,11 +26,14 @@ const (
 )
 
 var (
-	ErrUnknownType  = errors.New("unknown dependency type")
+	// ErrUnknownType indicates that an unknown dependency type was found
+	ErrUnknownType = errors.New("unknown dependency type")
+
+	// ErrMissingAlias indicates that a git-clone dependency requires an alias field
 	ErrMissingAlias = errors.New("dependency type git-clone requires alias field")
 )
 
-// The name of the dependency file
+// DepsFile is the name of the dependency file
 const DepsFile string = "deps.json"
 
 // Dependency defines a single dependency
@@ -43,6 +46,7 @@ type Dependency struct {
 	VCS       VersionControl `json:"-"`
 }
 
+// VersionControl is an interface that define a standard set of operations that can be completed by a version control system
 type VersionControl interface {
 	Clone(d *Dependency) (err error)
 
@@ -86,7 +90,7 @@ func Read(filename string) (deps DependencyMap, err error) {
 	}
 
 	// traverse map and look for empty version fields - provide a default if such found
-	for key, _ := range deps.Map {
+	for key := range deps.Map {
 		val := deps.Map[key]
 		if val.Version == "" {
 			switch val.Type {
@@ -130,7 +134,7 @@ func (d *DependencyMap) Write() (err error) {
 	return
 }
 
-// Configures the VCS depending on the type
+// SetupVCS configures the VCS depending on the type
 func (d *Dependency) SetupVCS(name string) (err error) {
 	switch d.Type {
 	case TypeGitClone:

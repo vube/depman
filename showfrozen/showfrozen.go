@@ -1,6 +1,6 @@
 package showfrozen
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import "fmt"
 
@@ -9,9 +9,9 @@ import "github.com/vube/depman/util"
 import "github.com/vube/depman/colors"
 
 //Read - get top-level frozen dependencies
-func Read(deps dep.DependencyMap) (to_return string) {
+func Read(deps dep.DependencyMap) (result string) {
 	var err error
-	var to_return_agg = make(map[string]*dep.Dependency)
+	var resultMap = make(map[string]*dep.Dependency)
 
 	util.Print(colors.Yellow("NOTE: This will not reflect the state of the remote unless you have just run `depman install`."))
 
@@ -26,19 +26,19 @@ func Read(deps dep.DependencyMap) (to_return string) {
 			util.Fatal(err)
 		}
 
-		to_return_agg[k] = v
+		resultMap[k] = v
 	}
 
 	//not changing the logic in the loop because we might want to change the print format later
-	for _, v := range to_return_agg {
-		to_return += fmt.Sprintf("%s %s\n", v.Repo, v.Version)
+	for _, v := range resultMap {
+		result += fmt.Sprintf("%s %s\n", v.Repo, v.Version)
 	}
 
 	return
 }
 
 //ReadRecursively - get frozen dependencies recursively
-func ReadRecursively(deps dep.DependencyMap, set map[string]string) (to_return string) {
+func ReadRecursively(deps dep.DependencyMap, set map[string]string) (result string) {
 	var err error
 
 	if set == nil {
@@ -48,9 +48,9 @@ func ReadRecursively(deps dep.DependencyMap, set map[string]string) (to_return s
 	}
 
 	for name, d := range deps.Map {
-		var sub_path string
-		var deps_file string
-		var sub_deps dep.DependencyMap
+		var subPath string
+		var depsFile string
+		var subDeps dep.DependencyMap
 
 		if _, ok := set[d.Repo]; ok {
 			continue
@@ -70,19 +70,19 @@ func ReadRecursively(deps dep.DependencyMap, set map[string]string) (to_return s
 			}
 
 			set[d.Repo] = temp
-			to_return += fmt.Sprintf("%s %s\n", d.Repo, temp)
+			result += fmt.Sprintf("%s %s\n", d.Repo, temp)
 		}
 
-		sub_path = d.Path()
+		subPath = d.Path()
 
 		// Recursive
-		deps_file = util.UpwardFind(sub_path, dep.DepsFile)
-		if deps_file != "" {
-			sub_deps, err = dep.Read(deps_file)
+		depsFile = util.UpwardFind(subPath, dep.DepsFile)
+		if depsFile != "" {
+			subDeps, err = dep.Read(depsFile)
 			if err == nil {
-				to_return += ReadRecursively(sub_deps, set)
+				result += ReadRecursively(subDeps, set)
 			} else {
-				util.Print(colors.Yellow("Error reading deps from '" + sub_deps.Path + "': " + err.Error()))
+				util.Print(colors.Yellow("Error reading deps from '" + subDeps.Path + "': " + err.Error()))
 			}
 		}
 	}

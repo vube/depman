@@ -2,7 +2,7 @@
 // Cleaning of existing changes in dependency repositories is controlled by the --clean flag
 package install
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"flag"

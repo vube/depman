@@ -1,3 +1,4 @@
+// Package timelock implements a time based cache for dependencies
 package timelock
 
 import (
@@ -41,6 +42,7 @@ func init() {
 	flag.BoolVar(&skip, "skip-cache", false, "Skip the time based cache for this run only")
 }
 
+// Clear clears the cache, returns true if the cache was cleared
 func Clear() (cleared bool) {
 	cleared = clear
 
@@ -64,6 +66,7 @@ func Clear() (cleared bool) {
 	return
 }
 
+// Read reads the cache from disk
 func Read() {
 	parts := strings.Split(os.Getenv("GOPATH"), ":")
 	cacheFile = filepath.Join(parts[0], cacheFileName)
@@ -87,6 +90,7 @@ func Read() {
 	}
 }
 
+// Write writes the cache out to disk
 func Write() {
 	if skip {
 		return
@@ -108,6 +112,7 @@ func Write() {
 	return
 }
 
+// IsStale returns true if the cached dependency is older than timeoutHours
 func IsStale(d *dep.Dependency) (stale bool) {
 
 	if skip || d.SkipCache {

@@ -1,6 +1,6 @@
 package dep
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 import (
 	"errors"
@@ -11,6 +11,7 @@ import (
 	"github.com/vube/depman/util"
 )
 
+// Git implements the VersionControl interface by using Git
 type Git struct{}
 
 // Checkout uses the appropriate VCS to checkout the specified version of the code
@@ -54,15 +55,11 @@ func (g *Git) GetHead(d *Dependency) (hash string, err error) {
 
 	pwd = util.Pwd()
 	util.Cd(d.Path())
+	defer util.Cd(pwd)
 
 	c := exec.Command("git", "rev-parse", d.Version)
-	{
-		var out_bytes []byte
-		out_bytes, err = c.CombinedOutput()
-		hash = strings.TrimSuffix(string(out_bytes), "\n")
-	}
-
-	util.Cd(pwd)
+	out, err := c.CombinedOutput()
+	hash = strings.TrimSuffix(string(out), "\n")
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
@@ -109,7 +106,7 @@ func (g *Git) isBranch(name string) (result bool) {
 	return
 }
 
-// CloneFetch will clone d.Repo into d.Path() if d.Path does not exist, otherwise it will cd to d.Path() and run git fetch
+// Clone clones d.Repo into d.Path() if d.Path does not exist, otherwise it will cd to d.Path() and run git fetch
 func (g *Git) Clone(d *Dependency) (err error) {
 	if !util.Exists(d.Path()) {
 		if d.Type == TypeGitClone {
@@ -121,6 +118,7 @@ func (g *Git) Clone(d *Dependency) (err error) {
 	return
 }
 
+// Update updates a git repo
 func (g *Git) Update(d *Dependency) (err error) {
 	if g.isBranch(d.Version) {
 		err = util.RunCommand("git pull")
@@ -128,11 +126,13 @@ func (g *Git) Update(d *Dependency) (err error) {
 	return
 }
 
+// Fetch fetches a git repo
 func (g *Git) Fetch(d *Dependency) (err error) {
 	err = util.RunCommand("git fetch origin")
 	return
 }
 
+// Clean cleans a git repo: `git reset --hard HEAD ; git clean -fd`
 func (g *Git) Clean(d *Dependency) {
 	util.PrintIndent(colors.Red("Cleaning:") + colors.Blue(" git reset --hard HEAD"))
 	util.RunCommand("git reset --hard HEAD")

@@ -31,7 +31,7 @@ func (s *UpgradeSuite) TestVersionParseEmpty(c *C) {
 	v := new(version)
 	err := v.parse("")
 	c.Check(err, Not(Equals), nil)
-	c.Check(err.Error(), Equals, "Versions must be three ints separated by '.'")
+	c.Check(err.Error(), Equals, "versions must be three ints separated by '.'")
 }
 
 func (s *UpgradeSuite) TestVersionParseSimple(c *C) {

@@ -1,29 +1,26 @@
-# depman
---
-Dependency management helper for Golang packages. Supports versioned
-dependencies using standard Golang imports.
+/*
 
+Dependency management helper for Golang packages.
+Supports versioned dependencies using standard Golang imports.
 
-### Installation
+Installation
 
 Run:
 
-    go get github.com/vube/depman
-    depman help
+	go get github.com/vube/depman
+	depman help
 
-
-### Author
+Author
 
 Nicholas Capo <nicholas@vubeology.com>
 
+Copyright
 
-### Copyright
-
-Copyright 2013-2014 Vubeology, Inc. Released under the MIT License (see
-LICENSE).
+Copyright 2013-2014 Vubeology, Inc. Released under the MIT License (see LICENSE).
 
 
-### Features
+
+Features
 
 * Simple json configuration file
 
@@ -41,13 +38,13 @@ support `go get`
 * Handles Multi-Part $GOPATH
 
 
-### Usage
+Usage
 
 Run `depman` in the directory with your `deps.json`, or use the `--path`
 argument to specify the directory where `deps.json` is located.
 
 
-### Commands
+Commands
 
 * `init` Create an empty deps.json
 
@@ -58,13 +55,13 @@ argument to specify the directory where `deps.json` is located.
 * `update [nickname] [branch]` Update [nickname] to use the latest commit in
 [branch]
 
-* `show-frozen` Show dependencies as resolved to commit IDs. Use the
-`--recursive` flag to descend into dependencies depth-first.
+* `show-frozen` Show dependencies as resolved to commit IDs.
+Use the `--recursive` flag to descend into dependencies depth-first.
 
 * `help` Display help message
 
 
-### Options
+Options
 
 * `-clean=false`: Remove changes to code in dependencies
 
@@ -83,12 +80,12 @@ argument to specify the directory where `deps.json` is located.
 * `-skip-cache=false`: Skip the time based cache for this run only
 
 * `-verbose=false`: Display commands as they are run, and other informative
-### messages
+messages
 
 * `-version=false`: Display version number
 
 
-### Basic Algorithm
+Basic Algorithm
 
 For each dependency:
 
@@ -96,14 +93,12 @@ For each dependency:
 
 2. Checkout the specified version
 
-3. Look in the dependency's directory for a `deps.json` and recursively install
-those dependencies
+3. Look in the dependency's directory for a `deps.json` and recursively install those dependencies
 
-4. If the dependency type is `git-clone` then manually run `git clone`, `git
-fetch`, etc as needed
+4. If the dependency type is `git-clone` then manually run `git clone`, `git fetch`, etc as needed
 
 
-### Duplicates
+Duplicates
 
 Duplicated dependencies (anywhere in the tree) with _identical_ versions will be
 skipped (this just saves some time and prevents infinite recursion). Duplicated
@@ -111,18 +106,16 @@ dependencies with _different_ versions cause a fatal error and must be fixed by
 the developer.
 
 
-### Non Go-Getable Repos
+Non Go-Getable Repos
 
 Some repositories (private bitbucket repositories for example), are not
 supported by `go get`. To include those repositories in depman:
 
 1. Change the type to `git-clone` (hg and bzr are not yet supported)
 
-2. Change the `repo` to a full git url (include everything necessary for `git
-clone`)
+2. Change the `repo` to a full git url (include everything necessary for `git clone`)
 
-3. Add an `alias` field to specify a directory in which to clone, the path is
-rooted at `$GOPATH/src/`
+3. Add an `alias` field to specify a directory in which to clone, the path is rooted at `$GOPATH/src/`
 
 See the example below or the included `deps.json` file.
 
@@ -135,7 +128,7 @@ directory, if not found, depman will install the dependency to the first part of
 $GOPATH.
 
 
-### Cache
+Cache
 
 Depman uses a time based cache to speed up normal operations.
 
@@ -156,10 +149,9 @@ Additional information about the cache (including the time spent while
 installing) can been seen by running depman with the `--verbose` flag.
 
 
-### Implementation Requirements
+Implementation Requirements
 
-* Depman shall not require any external dependencies (beyond the standard
-library) for normal operation
+* Depman shall not require any external dependencies (beyond the standard library) for normal operation
 
 * Testing dependencies shall be installed through depman
 
@@ -168,7 +160,7 @@ library) for normal operation
 * `golint` (https://github.com/golang/lint) shall not indicate any problems
 
 
-### Testing
+Testing
 
 Depman can be tested by running `make` in the source directory.
 
@@ -189,59 +181,62 @@ This does the following:
 See `Makefile` for more information.
 
 
-### JSON Structure
+JSON Structure
 
 NOTE: The file must be named `deps.json`
 
-    {
-    	"shortname":{
-    		"repo":"url/to/package, just like in import",
-    		"version":"commit, tag, or branch",
-    		"type": "one of 'git', 'bzr', 'hg'"
-    		"skip-cache":"optional, set to 'true' to always ignore the cache"
-    	},
-    	"not go getable":{
-    		"repo":"full git repo url, just like git clone"
-    		"version":"commit, tag, or branch",
-    		"type": "must be 'git-clone'",
-    		"alias": "target directory to clone into, (only supported for type 'git-clone')"
-    	}
-    }
+	{
+		"shortname":{
+			"repo":"url/to/package, just like in import",
+			"version":"commit, tag, or branch",
+			"type": "one of 'git', 'bzr', 'hg'"
+			"skip-cache":"optional, set to 'true' to always ignore the cache"
+		},
+		"not go getable":{
+			"repo":"full git repo url, just like git clone"
+			"version":"commit, tag, or branch",
+			"type": "must be 'git-clone'",
+			"alias": "target directory to clone into, (only supported for type 'git-clone')"
+		}
+	}
 
-### Example
+Example
 
-    {
-    	"gocheck": {
-    		"repo": "launchpad.net/gocheck",
-    		"version": "87",
-    		"type": "bzr"
-    	},
-    	"gocov": {
-    		"repo": "github.com/vube/gocov/gocov",
-    		"version": "93371a7ae85bec1c4afe9b9f3281c062ab106e6d",
-    		"type": "git",
-    		"skip-cache": true
-    	},
-    	"gocov-html": {
-    		"repo": "https://github.com/matm/gocov-html.git",
-    		"version": "1512341d22ab06788fc5ad63925fd07979a9ef39",
-    		"type": "git-clone",
-    		"alias": "github.com/matm/gocov-html"
-    	},
-    	"godocdown": {
-    		"repo": "github.com/robertkrimen/godocdown",
-    		"version": "0bfa0490548148882a54c15fbc52a621a9f50cbe",
-    		"type": "git"
-    	},
-    	"golint": {
-    		"repo": "github.com/golang/lint/golint",
-    		"version": "7e9cdc93310598b5c6cd9ce4d0d0a37c0f5b9e4c",
-    		"type": "git"
-    	}
-    }
+	{
+		"gocheck": {
+			"repo": "launchpad.net/gocheck",
+			"version": "87",
+			"type": "bzr"
+		},
+		"gocov": {
+			"repo": "github.com/vube/gocov/gocov",
+			"version": "93371a7ae85bec1c4afe9b9f3281c062ab106e6d",
+			"type": "git",
+			"skip-cache": true
+		},
+		"gocov-html": {
+			"repo": "https://github.com/matm/gocov-html.git",
+			"version": "1512341d22ab06788fc5ad63925fd07979a9ef39",
+			"type": "git-clone",
+			"alias": "github.com/matm/gocov-html"
+		},
+		"godocdown": {
+			"repo": "github.com/robertkrimen/godocdown",
+			"version": "0bfa0490548148882a54c15fbc52a621a9f50cbe",
+			"type": "git"
+		},
+		"golint": {
+			"repo": "github.com/golang/lint/golint",
+			"version": "7e9cdc93310598b5c6cd9ce4d0d0a37c0f5b9e4c",
+			"type": "git"
+		}
+	}
 
 
-### Todo
+
+Todo
 
 * Support manually cloning `hg` or `bzr` repositories (add types `hg-clone`, and
 `bzr-clone`)
+*/
+package main

@@ -1,14 +1,6 @@
-// Dependency Manager for Golang Projects
-// Author: Nicholas Capo <nicholas@vubeology.com>
-//
-//
-// Installation: `go get github.com/vube/depman`
-//
-// For help run 'depman help'
-//
 package main
 
-// Copyright 2013 Vubeology, Inc.
+// Copyright 2013-2014 Vubeology, Inc.
 
 //===============================================
 
@@ -35,7 +27,7 @@ import (
 
 // Version number
 // This should ALWAYS have 3 parts, (e.g. X.Y.Z) this is so upgrade.Check() works correctly
-const VERSION string = "2.9.0"
+const VERSION string = "2.9.1"
 
 //===============================================
 
