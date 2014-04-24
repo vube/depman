@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/vube/depman/add"
@@ -25,7 +26,8 @@ import (
 )
 
 // Version number
-const VERSION string = "2.8.2"
+// This should ALWAYS have 3 parts, (e.g. X.Y.Z) this is so upgrade.Check() works correctly
+const VERSION string = "2.9.0"
 
 //===============================================
 
@@ -52,6 +54,11 @@ func main() {
 	}
 
 	timelock.Read()
+
+	// check for a new version of depman
+	go upgrade.Check(VERSION)
+	runtime.Gosched()
+	defer upgrade.Print()
 
 	path = dep.GetPath(path)
 
