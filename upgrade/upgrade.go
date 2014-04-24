@@ -162,7 +162,7 @@ func (v *version) parse(ver string) (err error) {
 	parts := strings.Split(ver, ".")
 
 	if len(parts) != 3 {
-		return fmt.Errorf("Versions must be three ints separated by '.'")
+		return fmt.Errorf("versions must be three ints separated by '.'")
 	}
 	_, err = fmt.Sscanf(ver, "%d.%d.%d", &v.a, &v.b, &v.c)
 
