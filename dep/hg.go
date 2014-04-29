@@ -72,7 +72,7 @@ func (h *Hg) GetHead(d *Dependency) (hash string, err error) {
 	util.Cd(d.Path())
 	defer util.Cd(pwd)
 
-	out, err := exec.Command("hg", "id", "-i", d.Version).CombinedOutput()
+	out, err := exec.Command("hg", "id", "-i").CombinedOutput()
 	hash = strings.TrimSuffix(string(out), "\n")
 
 	if err != nil {
