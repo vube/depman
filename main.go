@@ -27,7 +27,7 @@ import (
 
 // Version number
 // This should ALWAYS have 3 parts, (e.g. X.Y.Z) this is so upgrade.Check() works correctly
-const VERSION string = "2.9.2"
+const VERSION string = "2.9.3"
 
 //===============================================
 
