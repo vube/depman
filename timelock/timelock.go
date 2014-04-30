@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
 	"github.com/vube/depman/util"
 )
@@ -50,7 +51,7 @@ func Clear() (cleared bool) {
 		parts := strings.Split(os.Getenv("GOPATH"), ":")
 		cacheFile = filepath.Join(parts[0], cacheFileName)
 
-		util.Print("Clearing cache file: " + cacheFile)
+		util.Print(colors.Yellow("Clearing cache file: " + cacheFile))
 
 		_, err := os.Stat(cacheFile)
 		if err != nil {
