@@ -8,15 +8,17 @@ package upgrade
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vube/depman/timelock"
 	"io/ioutil"
 	"net"
 	"net/http"
+	"os/exec"
 	"strings"
 	"time"
 
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
+	"github.com/vube/depman/result"
+	"github.com/vube/depman/timelock"
 	"github.com/vube/depman/util"
 )
 
@@ -40,10 +42,26 @@ func init() {
 }
 
 // Self upgrades this version of depman to the latest on the master branch
-func Self() {
+func Self(version string) {
 	selfCalled = true
 	util.Print(colors.Blue("Upgrading depman..."))
 	util.RunCommand("go get -u github.com/vube/depman")
+
+	cmd := exec.Command("depman", "--version")
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		result.RegisterError()
+		util.Print(colors.Red(string(out)))
+		return
+	}
+
+	newVersion := strings.TrimSuffix(strings.TrimPrefix(string(out), "Depman Version "), "\n")
+
+	if newVersion != version {
+		util.Print("Upgraded to Version " + newVersion)
+	} else {
+		util.Print("No upgrade found")
+	}
 }
 
 //============================================
