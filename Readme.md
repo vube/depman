@@ -150,10 +150,13 @@ If the cache was stale or unused, a '*' will be printed at the end of the
 installation line.
 
 You can clear the cache by deleting the cache file, or running depman with the
-`--clear-cache` flag.
+`--clear-cache` flag. The cache can be skipped for the current run by using the
+`--skip-cache` flag.
 
 Additional information about the cache (including the time spent while
 installing) can been seen by running depman with the `--verbose` flag.
+
+The code for this feature is in the `timelock` package.
 
 
 ### Implementation Requirements
