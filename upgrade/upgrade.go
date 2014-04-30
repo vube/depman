@@ -17,7 +17,6 @@ import (
 
 	"github.com/vube/depman/colors"
 	"github.com/vube/depman/dep"
-	"github.com/vube/depman/install"
 	"github.com/vube/depman/util"
 )
 
@@ -29,6 +28,7 @@ const (
 
 var (
 	checkCalled bool
+	selfCalled  bool
 	channel     chan string
 	checkError  error
 
@@ -36,23 +36,14 @@ var (
 )
 
 func init() {
-	self = new(dep.Dependency)
-	self.Repo = "github.com/vube/depman"
-	self.Version = "master"
-	self.Type = "git"
-	self.SetupVCS("depman")
+
 }
 
 // Self upgrades this version of depman to the latest on the master branch
 func Self() {
-	deps := dep.New()
-	deps.Map["depman"] = self
-
-	install.Recurse = false
-	install.Install(deps)
-	install.Recurse = true
-
-	util.RunCommand("go install github.com/vube/depman")
+	selfCalled = true
+	util.Print(colors.Blue("Upgrading depman..."))
+	util.RunCommand("go get -u github.com/vube/depman")
 }
 
 //============================================
@@ -63,6 +54,9 @@ func Check(ver string) {
 	var str string
 	checkCalled = true
 	channel = make(chan string, 0)
+
+	self = new(dep.Dependency)
+	self.Repo = "depman internal upgrade check"
 
 	if timelock.IsStale(self) {
 		str, checkError = check(ver)
@@ -102,6 +96,11 @@ func check(ver string) (result string, err error) {
 func Print() {
 	if !checkCalled {
 		util.Fatal(colors.Red("You must call upgrade.Check() before upgrade.Print()"))
+	}
+
+	// if the command used was self-upgrade, we can just return
+	if selfCalled {
+		return
 	}
 
 	ref := <-channel
