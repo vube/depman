@@ -77,7 +77,7 @@ func (h *Hg) GetHead(d *Dependency) (hash string, err error) {
 
 	if err != nil {
 		util.Print("pwd: " + util.Pwd())
-		util.PrintIndent(colors.Red("hg id -i " + d.Version))
+		util.PrintIndent(colors.Red("hg id -i"))
 		util.PrintIndent(colors.Red(hash))
 		util.PrintIndent(colors.Red(err.Error()))
 		util.Fatal("")
