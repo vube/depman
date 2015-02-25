@@ -27,7 +27,7 @@ import (
 
 // Version number
 // This should ALWAYS have 3 parts, (e.g. X.Y.Z) this is so upgrade.Check() works correctly
-const VERSION string = "2.9.4"
+const VERSION string = "2.9.5"
 
 //===============================================
 
@@ -46,6 +46,9 @@ func main() {
 	util.Parse()
 
 	util.Version(VERSION)
+
+	fmt.Println(colors.Red("Depman was deprecated on 25 February 2015"))
+	fmt.Println(colors.Red("We recommend using 'godep' instead: https://github.com/tools/godep"))
 
 	util.GoPathIsSet()
 

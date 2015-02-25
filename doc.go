@@ -1,5 +1,9 @@
 /*
 
+## Depman was deprecated on 25 February 2015
+
+## We recommend using godep instead: https://github.com/tools/godep
+
 Dependency management helper for Golang packages.
 Supports versioned dependencies using standard Golang imports.
 
